@@ -13,6 +13,8 @@ server.frame <- gframe(container=outerdatatab,expand=FALSE)
 ###Universal inputs
 ########################
 
+#Here's a comment
+
 ###Date inputs
 glabel("Begin date",container = date.frame)
 begindate <- gcalendar(text = "yyyy-mm-dd", format = "%Y-%m-%d", handler=NULL, 
