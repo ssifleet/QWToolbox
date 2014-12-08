@@ -1,3 +1,12 @@
+#' Chargebalance vs. pcode scatter plot
+#' 
+#' Takes output data object from NWISPullR and prints a plot of charge balance vs. a parameter. Requires charge balance = TRUE in NWISPullR
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @param new.threshold The threshold value in seconds from current system time for "new" data.
+#' @param icbparm.site.selection A character vector of site IDs to plot
+#' @param icbparm.plotparm A character vector of parameters to plot
+#' @export
+
 icbparmplot <- function(qw.data,
                         new.threshold,
                         icbparm.site.selection,
