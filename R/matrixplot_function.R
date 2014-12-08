@@ -1,4 +1,5 @@
-matrixplot <- function(matrix.site.selection,
+matrixplot <- function(qw.data,
+                        matrix.site.selection,
                        matrix.plotparm){
 
   

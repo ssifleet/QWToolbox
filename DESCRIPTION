@@ -1,0 +1,20 @@
+Package: RQA
+Type: Package
+Title: What the package does (short line)
+Version: 1.0
+Date: 2014-12-08
+Author: Who wrote it
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: More about what it does (maybe more than one line)
+License: What license is it under?
+imports:
+  RGtk2,
+  gWidgetsRGtk2,
+  gWidgets,
+  reshape2,
+  plyr,
+  RODBC,
+  stringr,
+  ggplot2,
+  grid,
+  gridExtra

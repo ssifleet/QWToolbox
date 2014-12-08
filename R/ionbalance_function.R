@@ -1,4 +1,4 @@
-ionbalance <- function() {
+ionbalance <- function(qw.data) {
 
 ###QWData ion balance factors and priorities
 ion.balance.data <- read.csv("Data/ionbalance.csv",header=TRUE,colClasses=c("character","character","numeric","character"))

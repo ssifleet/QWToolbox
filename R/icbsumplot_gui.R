@@ -1,54 +1,46 @@
 icbsumplot_gui <- function(...){
-  ###These exist checks are so that the data is refreshed when the user does a new data pull
-  ###Since the tables are dependent on the data, they need to be refreshed
-  
-  
-  ## Set up main group, make global so can be deleted 
-  if(exists("icbsum.mainGroup"))
-  {
-    if(!isExtant(icbsum.mainGroup))
-    {
-      icbsum.mainGroup <<- ggroup(label="Chargebalance vs sum(Cat/An)",container=interactive.frame)
-    }
-  }else(icbsum.mainGroup <<- ggroup(label="Chargebalance vs sum(Cat/An)",container=interactive.frame))
-  
-  
-  if(exists("icbsum.vargroup"))
-  {
-    if(isExtant(icbsum.vargroup))
-    {
-    delete(icbsum.mainGroup,icbsum.vargroup)
-    }
-    icbsum.vargroup <<- gframe(container=icbsum.mainGroup,expand=TRUE,horizontal=FALSE)
-  }else(icbsum.vargroup <<- gframe(container=icbsum.mainGroup,expand=TRUE,horizontal=FALSE))
+
+      .guiEnv$icbsum.mainGroup <- ggroup(label="Chargebalance vs sum(Cat/An)",container=.guiEnv$interactive.frame)
+      .guiEnv$icbsum.vargroup <- gframe(container=.guiEnv$icbsum.mainGroup,expand=TRUE,horizontal=FALSE)
   
 
-  visible(icbsum.mainGroup) <- FALSE
+  visible(.guiEnv$icbsum.mainGroup) <- FALSE
   
   
   
   ###Parameter browser
   
-  icbsum.varsite.frame <- gframe(container=icbsum.vargroup,expand=TRUE,horizontal=FALSE)
-  icbsum.site.selection <- gtable(items = na.omit(unique(qw.data$PlotTable[c("SITE_NO","STATION_NM")])),multiple=TRUE,container = icbsum.varsite.frame, expand = TRUE)
-  icbsum.plotparm <- gtable(items = c("sum cations","sum anions"),multiple=FALSE,container = icbsum.varsite.frame, expand = TRUE, fill = TRUE)
+  .guiEnv$icbsum.varsite.frame <- gframe(container=.guiEnv$icbsum.vargroup,expand=TRUE,horizontal=FALSE)
+  .guiEnv$icbsum.site.selection <- gtable(items = na.omit(unique(.guiEnv$qw.data$PlotTable[c("SITE_NO","STATION_NM")])),multiple=TRUE,container = .guiEnv$icbsum.varsite.frame, expand = TRUE)
+  .guiEnv$icbsum.plotparm <- gtable(items = c("sum cations","sum anions"),multiple=FALSE,container = .guiEnv$icbsum.varsite.frame, expand = TRUE, fill = TRUE)
   
+  ###Refresh plot
+  gbutton(text = "Refresh plot",container =.guiEnv$icbsum.vargroup,handler = function(h,...) {
+    icbsumplot(qw.data = .guiEnv$qw.data,
+               new.threshold = .guiEnv$new.threshold,
+               icbsum.site.selection = svalue(.guiEnv$icbsum.site.selection),
+               icbsum.plotparm = svalue(.guiEnv$icbsum.plotparm))
+  })
   ###Save plot
   
-  gbutton(text="Export Plot", container = icbsum.vargroup,handler = function(h,...) {
+  gbutton(text="Export Plot", container = .guiEnv$icbsum.vargroup,handler = function(h,...) {
   saveplot()
     }) 
     
-    addHandlerClicked(icbsum.site.selection,handler = function(h,...) {icbsumplot(icbsum.site.selection = svalue(icbsum.site.selection),
-                                                                                  icbsum.plotparm = svalue(icbsum.plotparm))})
-    addHandlerClicked(icbsum.plotparm,handler = function(h,...) {icbsumplot(icbsum.site.selection = svalue(icbsum.site.selection),
-                                                                            icbsum.plotparm = svalue(icbsum.plotparm))})  
+    addHandlerClicked(.guiEnv$icbsum.site.selection,handler = function(h,...) {icbsumplot(qw.data = .guiEnv$qw.data,
+                                                                               new.threshold = .guiEnv$new.threshold,
+                                                                                icbsum.site.selection = svalue(.guiEnv$icbsum.site.selection),
+                                                                                  icbsum.plotparm = svalue(.guiEnv$icbsum.plotparm))})
+    addHandlerClicked(.guiEnv$icbsum.plotparm,handler = function(h,...) {icbsumplot(qw.data = .guiEnv$qw.data,
+                                                                                    new.threshold = .guiEnv$new.threshold,
+                                                                                    icbsum.site.selection = svalue(.guiEnv$icbsum.site.selection),
+                                                                                    icbsum.plotparm = svalue(.guiEnv$icbsum.plotparm))})  
 
   
   
   
 
   
-  visible(icbsum.mainGroup) <- TRUE
+  visible(.guiEnv$icbsum.mainGroup) <- TRUE
   
 }

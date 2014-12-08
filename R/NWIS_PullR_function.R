@@ -1,16 +1,11 @@
-DSN <- "NWISCO"
-env.db <- "01"
-qa.db <- "02"
-STAIDS <- c("391454106224201",
-            "391500106224901",
-           "391501106224901",
-            "391504106225200",
-            "391504106225201")
-dl.parms <- read.csv("Data/pcodes.csv", header=F,colClasses = "character")
-parm.group.check <- TRUE
-dl.parms <- "IMM"
-
-
+#DSN = svalue(.guiEnv$dlserver.name)
+# env.db = svalue(.guiEnv$env.db.num)
+# qa.db = svalue(.guiEnv$qa.db.num)
+# STAIDS = .guiEnv$STAIDS
+# dl.parms = .guiEnv$dl.parms
+# parm.group.check = .guiEnv$parm.group.check
+# begin.date = as.POSIXct(svalue(.guiEnv$begindate))
+# end.date = as.POSIXct(svalue(.guiEnv$enddate))
 
 NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.check = FALSE,begin.date,end.date)
 {

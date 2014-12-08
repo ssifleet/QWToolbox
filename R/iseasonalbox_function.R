@@ -1,4 +1,6 @@
-iseasonalbox <- function(iseasonalbox.site.selection,
+iseasonalbox <- function(qw.data,
+                         new.threshold,
+                         iseasonalbox.site.selection,
                          iseasonalbox.plotparm,
                          iseasonalbox.show.points,
                          iseasonalbox.log.scale){
@@ -26,7 +28,14 @@ if(iseasonalbox.log.scale == TRUE)
   p1 <- p1 + scale_y_log10()
 }
 if((iseasonalbox.show.points)==TRUE){
-  p2 <- p1 + geom_point(aes(color = MEDIUM_CD,shape=REMARK_CD),size=3) + geom_text(aes(label=ifelse(RESULT_MD >= (Sys.time()-new.threshold),"New",""),hjust=1.1),show_guide=F)      
+  p2 <- p1 + geom_point(aes(color = MEDIUM_CD,shape=REMARK_CD),size=3) 
+  if(nrow(subset(qw.data$PlotTable,SITE_NO %in% iseasonalbox.site.selection & 
+                   PARM_CD==iseasonalbox.plotparm & MEDIUM_CD %in% c("WG ","WS ","OAQ") & 
+                   RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+  {
+    p2 <- p2 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% (iseasonalbox.site.selection) & PARM_CD==(iseasonalbox.plotparm) & MEDIUM_CD %in%(c("WG ","WS ","OAQ")) & RESULT_MD >= (Sys.time()-new.threshold)),
+                         aes(x=SAMPLE_MONTH,y=RESULT_VA,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
+  }else{}
   print(p2)
 } else{print(p1)}
 

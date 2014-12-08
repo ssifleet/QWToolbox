@@ -1,4 +1,6 @@
-iparmplot <- function(iparm.site.selection,
+iparmplot <- function(qw.data,
+                      new.threshold,
+                      iparm.site.selection,
                       iparm.xparm,
                       iparm.yparm,
                       iparm.show.lm){
@@ -38,9 +40,14 @@ iparmplot <- function(iparm.site.selection,
   p1 <- p1 + geom_point(size=3)
   p1 <- p1 + ylab(paste(ylabel,"\n")) + xlab(paste("\n",xlabel))
   p1 <- p1 + scale_colour_manual("Medium code",values = medium.colors)
-  p1 <- p1 + geom_text(aes(label=ifelse(RESULT_MD_X >= (Sys.time()-new.threshold) |
-                                          RESULT_MD_Y >= (Sys.time()-new.threshold),
-                                          "New",""),hjust=1.1),show_guide=F)      
+
+  ##Check for new samples and label them. Tried ifelse statement for hte label but it did no recognize new.threshol as a variable for some reason
+  if(nrow(subset(pp.plot.data, RESULT_MD_X >= (Sys.time()-new.threshold) | RESULT_MD_Y >= (Sys.time()-new.threshold))) > 0)
+  {
+    p1 <- p1 + geom_text(data=subset(pp.plot.data, RESULT_MD_X >= (Sys.time()-new.threshold) | RESULT_MD_Y >= (Sys.time()-new.threshold)),
+                         aes(x=RESULT_VA_X,y=RESULT_VA_Y,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
+  }else{}
+  
   p1 <- p1 + theme_USGS() + ggtitle(maintitle)
   
   
