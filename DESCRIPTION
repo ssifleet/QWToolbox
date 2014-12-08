@@ -1,20 +1,20 @@
-Package: RQA
+Package: QWToolbox
 Type: Package
-Title: What the package does (short line)
+Title: Discrete water-quality data review and exploration toolbox.
 Version: 1.0
 Date: 2014-12-08
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: T. Joe Mills
+Maintainer: T. Joe Mills <tmills@usgs.gov>
+Description: Facilitates rapid review and exploration of data stored in
+    internal, local NWIS servers.
 License: What license is it under?
-imports:
-  RGtk2,
-  gWidgetsRGtk2,
-  gWidgets,
-  reshape2,
-  plyr,
-  RODBC,
-  stringr,
-  ggplot2,
-  grid,
-  gridExtra
+imports: RGtk2,
+    gWidgetsRGtk2,
+    gWidgets,
+    reshape2,
+    plyr,
+    RODBC,
+    stringr,
+    ggplot2,
+    grid,
+    gridExtra
