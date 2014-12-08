@@ -1,185 +1,223 @@
+dataImport_gui <- function(...){
+  
+
+
 ##################
 ####Data import Tab
 ##################
-#nb <- gwindow()
+
 ##############################
 ###Setup the main window frame
 ##############################
-outerdatatab <- gframe(container=nb,horizontal=FALSE, label = "Data import")
-datatab <- gframe("Discrete QW Data",container=outerdatatab,expand=TRUE) 
-date.frame <- gframe(container=outerdatatab,expand=FALSE)
-server.frame <- gframe(container=outerdatatab,expand=FALSE)
+.guiEnv$outerdatatab <- gframe(container=.guiEnv$nb,horizontal=FALSE, label = "Data import",index=1)
+.guiEnv$datatab <- gframe("Discrete QW Data",container=.guiEnv$outerdatatab,expand=TRUE) 
+.guiEnv$date.frame <- gframe(container=.guiEnv$outerdatatab,expand=FALSE)
+.guiEnv$server.frame <- gframe(container=.guiEnv$outerdatatab,expand=FALSE)
 ########################
 ###Universal inputs
 ########################
 
-
 ###Date inputs
-glabel("Begin date",container = date.frame)
-begindate <- gcalendar(text = "yyyy-mm-dd", format = "%Y-%m-%d", handler=NULL, 
-                       action=NULL, container = date.frame)
+glabel("Begin date",container = .guiEnv$date.frame)
+.guiEnv$begindate <- gcalendar(text = "yyyy-mm-dd", format = "%Y-%m-%d", handler=NULL, 
+                       action=NULL, container = .guiEnv$date.frame)
 
-glabel("End date",container = date.frame)
-enddate <- gcalendar(text = "yyyy-mm-dd", format = "%Y-%m-%d", handler=NULL, 
-                     action=NULL, container = date.frame)
+glabel("End date",container = .guiEnv$date.frame)
+.guiEnv$enddate <- gcalendar(text = "yyyy-mm-dd", format = "%Y-%m-%d", handler=NULL, 
+                     action=NULL, container = .guiEnv$date.frame)
 
 ###Compute charge balance option
-calc.balance <- gcheckbox("Calculate charge balance?",checked=FALSE,container=date.frame)
+.guiEnv$calc.balance <- gcheckbox("Calculate charge balance?",checked=FALSE,container=.guiEnv$date.frame)
 
+if(exists("do.calc.balance",envir=.guiEnv))
+{
+  svalue(.guiEnv$calc.balance) <- .guiEnv$do.calc.balance
+  }else{}
+
+svalue(.guiEnv$calc.balance) <- TRUE
 ###Server inputs
-glabel("NWIS server\nname",container = server.frame)
-dlserver.name <- gedit(container = server.frame,initial.msg = "e.g. NWISCO") 
+glabel("NWIS server\nname",container = .guiEnv$server.frame)
+.guiEnv$dlserver.name <- gedit(container = .guiEnv$server.frame,initial.msg = "e.g. NWISCO") 
 
-glabel("Environmental database\nnumber",container = server.frame)
-env.db.num <- gedit(container = server.frame,initial.msg = "e.g. 01") 
+glabel("Environmental database\nnumber",container = .guiEnv$server.frame)
+.guiEnv$env.db.num <- gedit(container = .guiEnv$server.frame,initial.msg = "e.g. 01") 
 
-glabel("QA database\nnumber",container = server.frame)
-qa.db.num <- gedit(container = server.frame,initial.msg = "e.g. 02") 
+glabel("QA database\nnumber",container = .guiEnv$server.frame)
+.guiEnv$qa.db.num <- gedit(container = .guiEnv$server.frame,initial.msg = "e.g. 02") 
 
-gbutton(text="Import data", container=outerdatatab,handler = function(h,...){
+gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,...){
             
           ###Site ID input by method
-          if(svalue(siteid.method, index=TRUE) == 1)
+          if(svalue(.guiEnv$siteid.method, index=TRUE) == 1)
                {
-                STAIDS <- svalue(sitenumber)
-                } else if(svalue(siteid.method, index=TRUE) == 2)
+                .guiEnv$STAIDS <- svalue(.guiEnv$sitenumber)
+                } else if(svalue(.guiEnv$siteid.method, index=TRUE) == 2)
                 {
-                  STAIDS <- svalue(favsites)
-                } else if(svalue(siteid.method, index=TRUE) == 3)
+                  .guiEnv$STAIDS <- svalue(.guiEnv$favsites)
+                } else if(svalue(.guiEnv$siteid.method, index=TRUE) == 3)
                 {
-                  STAIDS <- (scan(svalue(ID.file),what="character"))
+                  .guiEnv$STAIDS <- (scan(svalue(.guiEnv$ID.file),what="character"))
                 }
             
             ###pcode input by method
-            if(svalue(pcode.method, index=TRUE) == 1)
+            if(svalue(.guiEnv$pcode.method, index=TRUE) == 1)
             {
-              parm.group.check <- TRUE
-              if(svalue(parm.group,index=TRUE) != 1)
+              .guiEnv$parm.group.check <- TRUE
+              if(svalue(.guiEnv$parm.group,index=TRUE) != 1)
               {
-              dl.parms <- nwis.parm.groups[svalue(parm.group,index=TRUE)]
-              } else {dl.parms <- "All"}
-            } else if(svalue(pcode.method, index=TRUE) == 2)
+                .guiEnv$dl.parms <- nwis.parm.groups[svalue(.guiEnv$parm.group,index=TRUE)]
+              } else {.guiEnv$dl.parms <- "All"}
+            } else if(svalue(.guiEnv$pcode.method, index=TRUE) == 2)
             {
-              dl.parms <- svalue(favpcodes)
-              parm.group.check <- FALSE
-            } else if(svalue(pcode.method, index=TRUE) == 3)
+              .guiEnv$dl.parms <- svalue(.guiEnv$favpcodes)
+              .guiEnv$parm.group.check <- FALSE
+            } else if(svalue(.guiEnv$pcode.method, index=TRUE) == 3)
             {
-              dl.parms <- scan(svalue(parmfile),what="character")
-              parm.group.check <- FALSE
+              .guiEnv$dl.parms <- scan(svalue(.guiEnv$parmfile),what="character")
+              .guiEnv$parm.group.check <- FALSE
             }
             
             ###Check for valid date range
-            if(!is.na(svalue(begindate)) && !is.na(svalue(enddate))) 
+            if(!is.na(svalue(.guiEnv$begindate)) && !is.na(svalue(.guiEnv$enddate))) 
               {
-              begin.date = as.POSIXct(svalue(begindate))
-              end.date = as.POSIXct(svalue(enddate))
-            } else{begin.date = svalue(begindate)
-                   end.date =svalue(enddate)}
+              .guiEnv$begin.date = as.POSIXct(svalue(.guiEnv$begindate))
+              .guiEnv$end.date = as.POSIXct(svalue(.guiEnv$enddate))
+            } else{.guiEnv$begin.date = svalue(.guiEnv$begindate)
+                   .guiEnv$end.date =svalue(.guiEnv$enddate)}
            
             ###Run the NWIS puller function to get data out of NWIS internal
-            qw.data <<-NWISPullR(DSN = svalue(dlserver.name),
-                      env.db = svalue(env.db.num),
-                      qa.db = svalue(qa.db.num),
-                      STAIDS = STAIDS,
-                      dl.parms = dl.parms,
-                      parm.group.check = parm.group.check,
-                      begin.date = as.POSIXct(svalue(begindate)),
-                      end.date = as.POSIXct(svalue(enddate)))
+          .guiEnv$qw.data <-NWISPullR(DSN = svalue(.guiEnv$dlserver.name),
+                                      env.db = svalue(.guiEnv$env.db.num),
+                                      qa.db = svalue(.guiEnv$qa.db.num),
+                                      STAIDS = .guiEnv$STAIDS,
+                                      dl.parms = .guiEnv$dl.parms,
+                                      parm.group.check = .guiEnv$parm.group.check,
+                                      begin.date = as.POSIXct(svalue(.guiEnv$begindate)),
+                                     end.date = as.POSIXct(svalue(.guiEnv$enddate)))
           
+          ###Deletes previous notebook and reloads so that all tabs depending on pulled data are refreshed. 
+          
+          ###Grab svalue of chargebalanceb efore close
+          .guiEnv$do.calc.balance <- svalue(.guiEnv$calc.balance)
+          delete(.guiEnv$w,.guiEnv$nb)
+          rm("nb",envir=.guiEnv)
+          
+          ###Notebook
+          .guiEnv$nb <- gnotebook(container=.guiEnv$w)
+          ###################
+          ###Data import Tab
+          ###################
+          
+         dataImport_gui()
+          
+          ###################
+          ###Plotting tab
+          ###################
+         plotting_gui()
+          ###################
+          ###Tables tab
+          ###################
+         tables_gui()
+          
+          ###################
+          ###DQI Tab
+          ###################
+         
+          #####Load up plotting gui tabs  
+                  
           itsplot_gui()
           iseasonalbox_gui()
           iparmbox_gui()
           iparmplot_gui()
           matrixplot_gui()
             ###Check for ion balanace and run funciton
-            if(svalue(calc.balance) == TRUE){
+            if(svalue(.guiEnv$calc.balance) == TRUE){
               ###Run ion balance function
-              chargebalance.table <- ionbalance()
+              .guiEnv$chargebalance.table <- ionbalance(qw.data = .guiEnv$qw.data)
               ###Join charge balance table to plot table
-              qw.data$PlotTable <<- join(qw.data$PlotTable,chargebalance.table[!duplicated(chargebalance.table$RECORD_NO), ],by="RECORD_NO")
+              .guiEnv$qw.data$PlotTable <- join(.guiEnv$qw.data$PlotTable,.guiEnv$chargebalance.table[!duplicated(.guiEnv$chargebalance.table$RECORD_NO), ],by="RECORD_NO")
               ####Dcast the charge balance table and make a balance data table
-              qw.data$BalanceDataTable <<- dcast(chargebalance.table, RECORD_NO + sum_cat + sum_an +perc.diff + complete.chem ~ Element,value.var = "charge")
+              .guiEnv$qw.data$BalanceDataTable <- dcast(.guiEnv$chargebalance.table, RECORD_NO + sum_cat + sum_an +perc.diff + complete.chem ~ Element,value.var = "charge")
               ####Add in site meta data
-              qw.data$BalanceDataTable <<- join(qw.data$DataTable[c("SITE_NO","STATION_NM","SAMPLE_START_DT","SAMPLE_END_DT","MEDIUM_CD","RECORD_NO")],qw.data$BalanceDataTable,by="RECORD_NO")
+              .guiEnv$qw.data$BalanceDataTable <- join(.guiEnv$qw.data$DataTable[c("SITE_NO","STATION_NM","SAMPLE_START_DT","SAMPLE_END_DT","MEDIUM_CD","RECORD_NO")],.guiEnv$qw.data$BalanceDataTable,by="RECORD_NO")
               
             icbplot_gui()
             icbsumplot_gui()
             icbparmplot_gui()
             
             }
-       
-            
+
           })
 ###################
 ###Site info pane
 ###################
-datatabA <- gframe("Site info",container=datatab, horizontal = FALSE,expand=TRUE) 
+.guiEnv$datatabA <- gframe("Site info",container=.guiEnv$datatab, horizontal = FALSE,expand=TRUE) 
 
 ###A radio button for selecting the type of site input, this will show or hide the pains depending on selection
-siteid.method <- gradio(container =datatabA, c("Single site ID",
+.guiEnv$siteid.method <- gradio(container =.guiEnv$datatabA, c("Single site ID",
                                                "Favorite site list",
                                                "Site IDs from file"),
                         selected = 1, horizontal = FALSE,index=TRUE,
                         handler = function(h,...) {
-                          if(svalue(siteid.method, index=TRUE) == 1) {
-                            visible(num.frame) <- TRUE
-                            visible(fsite.frame) <- FALSE
-                            visible(IDfile.frame) <- FALSE
-                          } else if (svalue(siteid.method,index=TRUE) == 2 ){
-                            visible(num.frame) <- FALSE
-                            visible(fsite.frame) <- TRUE
-                            visible(IDfile.frame) <- FALSE
-                          } else if (svalue(siteid.method,index=TRUE) == 3 ){
-                            visible(num.frame) <- FALSE
-                            visible(fsite.frame) <- FALSE
-                            visible(IDfile.frame) <- TRUE
+                          if(svalue(.guiEnv$siteid.method, index=TRUE) == 1) {
+                            visible(.guiEnv$num.frame) <- TRUE
+                            visible(.guiEnv$fsite.frame) <- FALSE
+                            visible(.guiEnv$IDfile.frame) <- FALSE
+                          } else if (svalue(.guiEnv$siteid.method,index=TRUE) == 2 ){
+                            visible(.guiEnv$num.frame) <- FALSE
+                            visible(.guiEnv$fsite.frame) <- TRUE
+                            visible(.guiEnv$IDfile.frame) <- FALSE
+                          } else if (svalue(.guiEnv$siteid.method,index=TRUE) == 3 ){
+                            visible(.guiEnv$num.frame) <- FALSE
+                            visible(.guiEnv$fsite.frame) <- FALSE
+                            visible(.guiEnv$IDfile.frame) <- TRUE
                           }
                           
                         })
 
 ###Input for 1 site
-num.frame <- gframe("Single site input",container=datatabA, horizontal = FALSE,expand=FALSE)
-glabel("Site number",container = num.frame)
-sitenumber <- gedit(container = num.frame) 
+.guiEnv$num.frame <- gframe("Single site input",container=.guiEnv$datatabA, horizontal = FALSE,expand=FALSE)
+glabel("Site number",container = .guiEnv$num.frame)
+.guiEnv$sitenumber <- gedit(container = .guiEnv$num.frame) 
 
 ###Input for multiple sites using an editable "favorites" table
 
-fsite.frame <- gframe("Favorite sites",container=datatabA, horizontal = FALSE,expand=TRUE,multiple=TRUE)
+.guiEnv$fsite.frame <- gframe("Favorite sites",container=.guiEnv$datatabA, horizontal = FALSE,expand=TRUE,multiple=TRUE)
 
 ###Fav sites gtable, this uses input from a csv file containing site ids (pcodes) to populate the table. 
 ###When "saving preferences"save preferences", the favsites gtable will need to be written to a csv file that is then loaded up when "open preferences" is used
 
 ###Button for editing favorites  table
-gbutton("Edit favorites",horizontal = FALSE,container=fsite.frame, 
+gbutton("Edit favorites",horizontal = FALSE,container=.guiEnv$fsite.frame, 
         handler =  function(h,...) {
-          popwin <- gwindow("Edit favorites")
-          edit.sites <- gdf(container = popwin, items=siteIDs,expand=TRUE) ###gdf editor for pcodes table object. This must be 
-          gbutton("Update table",horizontal = FALSE,container=popwin, 
+          .guiEnv$popwin <- gwindow("Edit favorites")
+          .guiEnv$edit.sites <- gdf(container = .guiEnv$popwin, items=.guiEnv$siteIDs,expand=TRUE) ###gdf editor for pcodes table object. This must be 
+          gbutton("Update table",horizontal = FALSE,container=.guiEnv$popwin, 
                   handler =  function(h,...) {
-                    delete(fsite.frame,favsites)
-                    siteIDs <<- as.character(edit.sites[,1])
-                    favsites <<- gtable(items = siteIDs,multiple=TRUE,container = fsite.frame, expand = TRUE, fill = TRUE)
-                    dispose(popwin) 
+                    delete(.guiEnv$fsite.frame,.guiEnv$favsites)
+                    .guiEnv$siteIDs <- as.character(.guiEnv$edit.sites[,1])
+                    .guiEnv$favsites <- gtable(items = .guiEnv$siteIDs,multiple=TRUE,container = .guiEnv$fsite.frame, expand = TRUE, fill = TRUE)
+                    dispose(.guiEnv$popwin) 
                   }
           )
         }
 )
 
 ###The favorites gtable
-favsites <- gtable(items = siteIDs,multiple=TRUE,container = fsite.frame, expand = TRUE, fill = TRUE)
+.guiEnv$favsites <- gtable(items = .guiEnv$siteIDs,multiple=TRUE,container = .guiEnv$fsite.frame, expand = TRUE, fill = TRUE)
 
 ###Input for multiple sites from a CSV file
 
-IDfile.frame <- gframe("Site IDs from file",container=datatabA, horizontal = FALSE,expand=FALSE)
-glabel("Site ID file",container = IDfile.frame)
-ID.file <- gfilebrowse(container = IDfile.frame,text = "Select site ID file...",quote = FALSE)
+.guiEnv$IDfile.frame <- gframe("Site IDs from file",container=.guiEnv$datatabA, horizontal = FALSE,expand=FALSE)
+glabel("Site ID file",container = .guiEnv$IDfile.frame)
+.guiEnv$ID.file <- gfilebrowse(container = .guiEnv$IDfile.frame,text = "Select site ID file...",quote = FALSE)
 
 
 
 ###Set initial frame visbibilty to NWIS QWSample, hide others
-visible(num.frame) <- TRUE
-visible(fsite.frame) <- FALSE
-visible(IDfile.frame) <- FALSE
+visible(.guiEnv$num.frame) <- TRUE
+visible(.guiEnv$fsite.frame) <- FALSE
+visible(.guiEnv$IDfile.frame) <- FALSE
 
 
 
@@ -188,82 +226,82 @@ visible(IDfile.frame) <- FALSE
 ###Parameters pane
 ########################
 
-datatabB <- gframe("Parameter info",container=datatab, horizontal = FALSE,expand=TRUE) 
+.guiEnv$datatabB <- gframe("Parameter info",container=.guiEnv$datatab, horizontal = FALSE,expand=TRUE) 
 
-pcode.method <- gradio(container =datatabB, c("NWIS parameter groups",
+.guiEnv$pcode.method <- gradio(container =.guiEnv$datatabB, c("NWIS parameter groups",
                                                "Favorite pcode list",
                                                "pcodes from file"),
                         selected = 1, horizontal = FALSE,index=TRUE,
                         handler = function(h,...) {
-                          if(svalue(pcode.method, index=TRUE) == 1) {
-                            visible(parm.group.frame) <- TRUE
-                            visible(fpcode.frame) <- FALSE
-                            visible(pfile.frame) <- FALSE
-                          } else if (svalue(pcode.method,index=TRUE) == 2 ){
-                            visible(parm.group.frame) <- FALSE
-                            visible(fpcode.frame) <- TRUE
-                            visible(pfile.frame) <- FALSE
-                          } else if (svalue(pcode.method,index=TRUE) == 3 ){
-                            visible(parm.group.frame) <- FALSE
-                            visible(fpcode.frame) <- FALSE
-                            visible(pfile.frame) <- TRUE
+                          if(svalue(.guiEnv$pcode.method, index=TRUE) == 1) {
+                            visible(.guiEnv$parm.group.frame) <- TRUE
+                            visible(.guiEnv$fpcode.frame) <- FALSE
+                            visible(.guiEnv$pfile.frame) <- FALSE
+                          } else if (svalue(.guiEnv$pcode.method,index=TRUE) == 2 ){
+                            visible(.guiEnv$parm.group.frame) <- FALSE
+                            visible(.guiEnv$fpcode.frame) <- TRUE
+                            visible(.guiEnv$pfile.frame) <- FALSE
+                          } else if (svalue(.guiEnv$pcode.method,index=TRUE) == 3 ){
+                            visible(.guiEnv$parm.group.frame) <- FALSE
+                            visible(.guiEnv$fpcode.frame) <- FALSE
+                            visible(.guiEnv$pfile.frame) <- TRUE
                           }
                           
                         })
 
 
 ###Select paramaters by NWIS pcode group
-parm.group.frame <- gframe("NWIS parameter groups",container=datatabB, horizontal = FALSE,expand=FALSE)
-glabel("Parameter groups",container = parm.group.frame )
+.guiEnv$parm.group.frame <- gframe("NWIS parameter groups",container=.guiEnv$datatabB, horizontal = FALSE,expand=FALSE)
+glabel("Parameter groups",container = .guiEnv$parm.group.frame )
 
 ###Engish parameter groups, indexed so do not change order
-parm.group <- gcombobox(c("All" , "physical", "cations", "anions", "nutrients",
+.guiEnv$parm.group <- gcombobox(c("All" , "physical", "cations", "anions", "nutrients",
                      "microbiological", "biological", "metals", "nonmetals", "pesticides",
                      "pcbs" ,"other organics" ,"radio chemicals", "stable isotopes", "sediment",
-                     "population/community"), container=parm.group.frame)
+                     "population/community"), container=.guiEnv$parm.group.frame)
 
 ###NWIS Parameter group codes, these are indexed the same as above so do not change order
-nwis.parm.groups <- c("INF", "PHY", "INM", "INN", "NUT", "MBI", "BIO", "IMM", "IMN", "TOX",
+.guiEnv$nwis.parm.groups <- c("INF", "PHY", "INM", "INN", "NUT", "MBI", "BIO", "IMM", "IMN", "TOX",
   "OPE", "OPC", "OOT", "RAD", "XXX", "SED", "POP")
 
 ###Input for multiple pcodes using an editable "favorites" table
 
-fpcode.frame <- gframe("Favorite pcodes",container=datatabB, horizontal = FALSE,expand=TRUE)
+.guiEnv$fpcode.frame <- gframe("Favorite pcodes",container=.guiEnv$datatabB, horizontal = FALSE,expand=TRUE)
 
 ###Fav pcodes gtable, this uses input from a csv file containing site ids (pcodes) to populate the table. 
 ###When "saving preferences"save preferences", the favpcodes gtable will need to be written to a csv file that is then loaded up when "open preferences" is used
 
 ###Button for editing favorites  table
-gbutton("Edit favorites",horizontal = FALSE,container=fpcode.frame, 
+gbutton("Edit favorites",horizontal = FALSE,container=.guiEnv$fpcode.frame, 
         handler =  function(h,...) {
-          popwin <- gwindow("Edit favorites")
-          edit.pcodes <- gdf(container = popwin, items=pcodes,expand=TRUE) ###gdf editor for pcodes table object. This must be 
-          gbutton("Update table",horizontal = FALSE,container=popwin, 
+          .guiEnv$popwin <- gwindow("Edit favorites")
+          .guiEnv$edit.pcodes <- gdf(container = .guiEnv$popwin, items=.guiEnv$pcodes,expand=TRUE) ###gdf editor for pcodes table object. This must be 
+          gbutton("Update table",horizontal = FALSE,container=.guiEnv$popwin, 
                   handler =  function(h,...) {
-                    delete(fpcode.frame,favpcodes)
-                    pcodes <<- as.character(edit.pcodes[,1])
-                    favpcodes <<- gtable(items = pcodes,multiple=TRUE,container = fpcode.frame, expand = TRUE, fill = TRUE)
-                    dispose(popwin) 
+                    delete(.guiEnv$fpcode.frame,favpcodes)
+                    .guiEnv$pcodes <- as.character(.guiEnv$edit.pcodes[,1])
+                    .guiEnv$favpcodes <- gtable(items = .guiEnv$pcodes,multiple=TRUE,container = fpcode.frame, expand = TRUE, fill = TRUE)
+                    dispose(.guiEnv$popwin) 
                   }
           )
         }
 )
 
 ###The favorites gtable
-favpcodes <- gtable(items = pcodes,multiple=TRUE,container = fpcode.frame, expand = TRUE, fill = TRUE)
+.guiEnv$favpcodes <- gtable(items = .guiEnv$pcodes,multiple=TRUE,container = .guiEnv$fpcode.frame, expand = TRUE, fill = TRUE)
 
 
 ###Read in pcodes from a file
-pfile.frame <- gframe("Read pcodes from file",container=datatabB, horizontal = FALSE,expand=FALSE)
-glabel("parameter code file",container = pfile.frame )
-parmfile <- gfilebrowse(container = pfile.frame,text = "Select pcode file...",quote = FALSE)
+.guiEnv$pfile.frame <- gframe("Read pcodes from file",container=.guiEnv$datatabB, horizontal = FALSE,expand=FALSE)
+glabel("parameter code file",container = .guiEnv$pfile.frame )
+.guiEnv$parmfile <- gfilebrowse(container = .guiEnv$pfile.frame,text = "Select pcode file...",quote = FALSE)
 
 
 
 ###Set initial frame visbibilty to NWIS QWSample, hide others
-visible(parm.group.frame) <- TRUE
-visible(pfile.frame) <- FALSE
-visible(fpcode.frame) <- FALSE
+visible(.guiEnv$parm.group.frame) <- TRUE
+visible(.guiEnv$pfile.frame) <- FALSE
+visible(.guiEnv$fpcode.frame) <- FALSE
 
 
 ########################
@@ -275,3 +313,4 @@ visible(fpcode.frame) <- FALSE
 #nonnwisfile <- gedit(container = datatabC,initial.msg = "filename including csv extension")
 #gbutton(text="Import non-NWIS data", container=datatabC)
 
+}

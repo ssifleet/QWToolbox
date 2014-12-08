@@ -1,4 +1,6 @@
-icbsumplot <- function(icbsum.site.selection,
+icbsumplot <- function(qw.data,
+                       new.threshold,
+                       icbsum.site.selection,
                        icbsum.plotparm
                        ) {
   
@@ -25,7 +27,15 @@ icbsumplot <- function(icbsum.site.selection,
     p1 <- p1 + scale_y_continuous(limits=c(-100,100))
     p1 <- p1 + scale_colour_manual("Medium code",values = medium.colors)
     p1 <- p1 + scale_shape_manual("Chemistry status",values = qual.shapes)
-    p1 <- p1 + geom_text(aes(label=ifelse(RESULT_MD >= (Sys.time()-new.threshold),"New",""),hjust=1.1),show_guide=F)      
+    
+    if(nrow(subset(qw.data$PlotTable,SITE_NO %in% icbsum.site.selection & !duplicated(RECORD_NO) == TRUE & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+    {
+      p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% icbsum.site.selection & 
+                                         !duplicated(RECORD_NO) == TRUE & 
+                                         RESULT_MD >= (Sys.time()-new.threshold)),
+                           aes(x=sum_cat,y=perc.diff,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
+    }else{}
+    
     p1 <- p1 + theme_USGS() + ggtitle(maintitle)
     p1 <- p1 + geom_hline(data = hline,aes(yintercept = yint,linetype=Imbalance),show_guide=TRUE) 
     
@@ -42,7 +52,14 @@ icbsumplot <- function(icbsum.site.selection,
     p1 <- p1 + scale_y_continuous(limits=c(-100,100))
     p1 <- p1 + scale_colour_manual("Medium code",values = medium.colors)
     p1 <- p1 + scale_shape_manual("Chemistry status",values = qual.shapes)
-    p1 <- p1 + geom_text(aes(label=ifelse(RESULT_MD >= (Sys.time()-new.threshold),"New",""),hjust=1.1),show_guide=F)      
+
+    if(nrow(subset(qw.data$PlotTable,SITE_NO %in% icbsum.site.selection & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+    {
+      p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% icbsum.site.selection & 
+                                                    RESULT_MD >= (Sys.time()-new.threshold)),
+                           aes(x=sum_an,y=perc.diff,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
+    }else{}
+    
     p1 <- p1 + theme_USGS() + ggtitle(maintitle)
     p1 <- p1 + geom_hline(data = hline,aes(yintercept = yint,linetype=Imbalance),show_guide=TRUE) 
     

@@ -1,6 +1,7 @@
-icbparmplot <- function(icbparm.site.selection,
-                        icbparm.plotparm
-                        ) {
+icbparmplot <- function(qw.data,
+                        new.threshold,
+                        icbparm.site.selection,
+                        icbparm.plotparm) {
   
   ## Sets color to medium code name, not factor level, so its consistant between all plots regardles of number of medium codes in data
   medium.colors <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#D55E00")
@@ -24,7 +25,13 @@ icbparmplot <- function(icbparm.site.selection,
   p1 <- p1 + scale_y_continuous(limits=c(-100,100))
   p1 <- p1 + scale_colour_manual("Medium code",values = medium.colors)
   p1 <- p1 + scale_shape_manual("Chemistry status",values = qual.shapes)
-  p1 <- p1 + geom_text(aes(label=ifelse(RESULT_MD >= (Sys.time()-new.threshold),"New",""),hjust=1.1),show_guide=F)      
+  if(nrow(subset(qw.data$PlotTable,SITE_NO == icbparm.site.selection & PARM_CD==icbparm.plotparm & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+  {
+    p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO == icbparm.site.selection & 
+                                       PARM_CD==icbparm.plotparm & 
+                                       RESULT_MD >= (Sys.time()-new.threshold)),
+                         aes(x=RESULT_VA,y=perc.diff,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
+  }else{}
   p1 <- p1 + theme_USGS()  + ggtitle(maintitle)
   p1 <- p1 + geom_hline(data = hline,aes(yintercept = yint,linetype=Imbalance),show_guide=TRUE) 
   

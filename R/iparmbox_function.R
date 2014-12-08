@@ -1,4 +1,6 @@
-iparmbox <- function(iparmbox.site.selection,
+iparmbox <- function(qw.data,
+                      new.threshold,
+                     iparmbox.site.selection,
                          iparmbox.plotparm,
                          iparmbox.show.points,
                      iparmbox.log.scale){
@@ -26,7 +28,12 @@ iparmbox <- function(iparmbox.site.selection,
     p1 <- p1 + scale_y_log10()
   }
   if((iparmbox.show.points)==TRUE){
-    p2 <- p1 + geom_point(aes(color = MEDIUM_CD,shape=REMARK_CD),size=3) + geom_text(aes(label=ifelse(RESULT_MD >= (Sys.time()-new.threshold),"New",""),hjust=1.1),show_guide=F)      
+    p2 <- p1 + geom_point(aes(color = MEDIUM_CD,shape=REMARK_CD),size=3)
+    if(nrow(subset(qw.data$PlotTable,SITE_NO %in% (iparmbox.site.selection) & PARM_CD==(iparmbox.plotparm) & MEDIUM_CD %in%(c("WG ","WS ","OAQ")) & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+    {
+      p2 <- p2 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% (iparmbox.site.selection) & PARM_CD==(iparmbox.plotparm) & MEDIUM_CD %in%(c("WG ","WS ","OAQ")) & RESULT_MD >= (Sys.time()-new.threshold)),
+                           aes(x=PARM_NM,y=RESULT_VA,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
+    }else{}
     print(p2)
   } else{print(p1)}
   
