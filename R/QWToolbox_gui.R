@@ -1,4 +1,9 @@
-RQA_gui <- function(...){
+#' QWToolbox gui
+#' Function to run the QWToolbox gui
+#' @export
+
+
+qwtoolbox <- function(...){
 ###Create an environment to hold objects and gui elements created inside hanlders. handlers are functions responding to user inputs (e.g. addHandlerClicked), but the objects they create need to be accessed everywhere
   
 .guiEnv <<- new.env()

@@ -142,7 +142,7 @@ gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,
               .guiEnv$qw.data$BalanceDataTable <- join(.guiEnv$qw.data$DataTable[c("SITE_NO","STATION_NM","SAMPLE_START_DT","SAMPLE_END_DT","MEDIUM_CD","RECORD_NO")],.guiEnv$qw.data$BalanceDataTable,by="RECORD_NO")
               
             icbplot_gui()
-            icbsumplot_gui()
+            iscsumplot_gui()
             icbparmplot_gui()
             
             }
