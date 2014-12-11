@@ -47,7 +47,7 @@ iscsumplot_gui <- function(...){
     y <- data$sum_cat
     
     ###run flagger function. This returns the row index of the sample which is used to grab the record number
-    row.index <- flagger(x=x,y=y)
+    row.index <- flagger(data=data,x=x,y=y)
     
     .guiEnv$flagged.samples <- c(.guiEnv$flagged.samples,data$RECORD[row.index])
      print(.guiEnv$flagged.samples)                                 

@@ -38,11 +38,14 @@ iscsumplot <- function(qw.data,
     p1 <- p1 + labs(color='Sum ions')
     p1 <- p1 + scale_shape_manual("Chemistry status",values = qual.shapes)
     ###Line for sum/conductunce ratio acceptable bounds
-    p1 <- p1 + geom_abline(aes(slope = 0.0092, intercept=0),linetype="dashed",show_guide=TRUE) 
-    p1 <- p1 + geom_abline(aes(slope = 0.0124, intercept=0),linetype="dashed" ,show_guide=TRUE) 
-  
+    #p1 <- p1 + geom_abline(aes(slope = 0.0092, intercept=0),linetype="dashed",show_guide=TRUE) 
+    #p1 <- p1 + geom_abline(aes(slope = 0.0124, intercept=0),linetype="dashed" ,show_guide=TRUE) 
+  p1 <- p1+geom_ribbon(data = subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & PARM_CD== "00095"),
+                       aes(x=RESULT_VA,ymin=0.0092*RESULT_VA,ymax=0.0124*RESULT_VA,fill="gray",inherit.aes=F),
+                       alpha=0.5,show_guide=TRUE)
+  p1 <- p1 + scale_fill_manual(name = "Acceptable sum/Sc range",values="gray",labels="")
     ###Remove lines from symbol and color legends
-    p1 <- p1 + guides(shape = guide_legend(override.aes = list(linetype = 0))) + guides(color = guide_legend(override.aes = list(linetype = 0)))
+    p1 <- p1 + guides(shape = guide_legend(override.aes = list(fill = NA))) + guides(color = guide_legend(override.aes = list(fill = NA)))
     #p1 <- p1 + labs(linetype="Acceptable sum(ion)/Sc range")
     if(nrow(subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & PARM_CD== "00095" & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
     {

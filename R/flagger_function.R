@@ -1,4 +1,4 @@
-flagger <- function(x,y)
+flagger <- function(data,x,y)
 {
   #Get viewport
 viewport <- grid.ls()
