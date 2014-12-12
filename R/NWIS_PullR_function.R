@@ -92,7 +92,7 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
 
   
   #Make dataframe as record number and pcode. MUST HAVE ALL UNIQUE PCODE NAMES
-  DataTable1 <- dcast(Results, RECORD_NO ~ PARM_DS ,value.var = c("Val_qual"))
+  DataTable1 <- dcast(Results, RECORD_NO ~ PARM_NM ,value.var = c("Val_qual"))
   
   #fill in record number meta data (statoin ID, name, date, time)
   DataTable1 <- join(DataTable1,Sample_meta, by="RECORD_NO")
@@ -180,7 +180,7 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   } else {Results <- subset(Results, PARM_CD %in% dl.parms)}
  
   #Make dataframe as record number and pcode. MUST HAVE ALL UNIQUE PCODE NAMES
-  DataTable2 <- dcast(Results, RECORD_NO ~ PARM_DS,value.var = "Val_qual")
+  DataTable2 <- dcast(Results, RECORD_NO ~ PARM_NM,value.var = "Val_qual")
   
   #fill in record number meta data (statoin ID, name, date, time)
   DataTable2 <- join(DataTable2,Sample_meta, by="RECORD_NO")

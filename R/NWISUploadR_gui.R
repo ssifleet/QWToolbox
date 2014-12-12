@@ -95,12 +95,12 @@ glabel("End date",container = .guiEnv$nwis.qwsample)
                              #Assign input values
                              
                              if (svalue(.guiEnv$do.censor)){ ###Have to set the censor logical htis way because it does not read it as a logive using svalue method
-                               censor <- TRUE
+                               .guiEnv$censor <- TRUE
                              } else (.guiEnv$censor <- FALSE)
 
                              if(!is.na(svalue(.guiEnv$qwsample.begindate)) && !is.na(svalue(.guiEnv$qwsample.enddate))) 
                              {
-                               .guiEnv$qwsample.begin.date = as.POSIXct(.guiEnv$svalue(qwsample.begindate))
+                               .guiEnv$qwsample.begin.date = as.POSIXct(svalue(.guiEnv$qwsample.begindate))
                                .guiEnv$qwsample.end.date = as.POSIXct(svalue(.guiEnv$qwsample.enddate))
                              } else{.guiEnv$qwsample.begin.date = NA
                                     .guiEnv$qwsample.end.date =NA}

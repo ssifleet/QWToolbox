@@ -18,9 +18,28 @@ icbparmplot_gui <- function(...){
 ###Refresh plot
 gbutton(text = "Refresh plot",container =.guiEnv$icbparm.vargroup,handler = function(h,...) {icbparmplot(qw.data = .guiEnv$qw.data,
                                                                                                           new.threshold = .guiEnv$new.threshold,
-                                                                                                          icbparm.site.selection = svalue(.guiEnv$icbparm.site.selection),
+                                                                                                       icbparm.site.selection = svalue(.guiEnv$icbparm.site.selection),
                                                                                                           icbparm.plotparm = svalue(.guiEnv$icbparm.plotparm))})
-  ###Save plot
+ 
+###Flag sample 
+gbutton(text="Flag sample",container = .guiEnv$icbparm.vargroup,handler = function(h,...) {
+  ###Refresh plot so that viewport exists
+  icbparmplot(qw.data = .guiEnv$qw.data,
+              new.threshold = .guiEnv$new.threshold,
+              icbparm.site.selection = svalue(.guiEnv$icbparm.site.selection),
+              icbparm.plotparm = svalue(.guiEnv$icbparm.plotparm))
+  ###get a dataframe identical to the one used by the plot to pass to flagger function
+  data <- subset(.guiEnv$qw.data$PlotTable,SITE_NO %in% svalue((.guiEnv$icbparm.site.selection)) & PARM_CD==svalue((.guiEnv$icbparm.plotparm)))
+  x <- data$RESULT_VA
+  y <- data$perc.diff
+  
+  ###run flagger function. This returns the row index of the sample which is used to grab the record number
+  row.index <- flagger(data=data,x=x,y=y)
+  .guiEnv$flagged.samples <-  rbind(.guiEnv$flagged.samples,data.frame(RECORD_NO = data$RECORD_NO[row.index],FLAG_WHERE="Charge-parm"))
+  
+}) 
+
+###Save plot
   
   gbutton(text="Export Plot", container = .guiEnv$icbparm.vargroup,handler = function(h,...) {
 svaeplot()
