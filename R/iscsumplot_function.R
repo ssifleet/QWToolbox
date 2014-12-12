@@ -24,16 +24,47 @@ iscsumplot <- function(qw.data,
     {
       ylabel <- "sum cations (mEQ/l)"
       p1 <- p1 + geom_point(aes(x=RESULT_VA,y=sum_cat,shape = complete.chem),size=3)
+      if(nrow(subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & PARM_CD== "00095" & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+      {
+        p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & 
+                                           PARM_CD== "00095" &
+                                           RESULT_MD >= (Sys.time()-new.threshold)),
+                             aes(x=RESULT_VA,y=sum_cat,label="New",hjust=1.1),show_guide=F)      
+          }else{}
+      
       } else if(iscsum.plotparm == "sum anions")
-    {
+    
+        {
       ylabel <- "sum anions (mEQ/l)"
       p1 <- p1 + geom_point(aes(x=RESULT_VA,y=sum_an,shape = complete.chem),size=3)
-    } else if(iscsum.plotparm == "Both")
-    {
+      if(nrow(subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & PARM_CD== "00095" & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+      {
+        p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & 
+                                           PARM_CD== "00095" &
+                                           RESULT_MD >= (Sys.time()-new.threshold)),
+                             aes(x=RESULT_VA,y=sum_an,label="New",hjust=1.1),show_guide=F)      
+      
+          }else{}    
+      
+      } else if(iscsum.plotparm == "Both")
+    
+        {
       ylabel <- "mEQ/l"
       p1 <- p1 + geom_point(aes(x=RESULT_VA,y=sum_cat,shape = complete.chem, color = "Cations"),size=3)
       p1 <- p1 + geom_point(aes(x=RESULT_VA,y=sum_an,shape = complete.chem, color = "Anions"),size=3)
-    }
+      if(nrow(subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & PARM_CD== "00095" & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+      {
+        p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & 
+                                           PARM_CD== "00095" &
+                                           RESULT_MD >= (Sys.time()-new.threshold)),
+                             aes(x=RESULT_VA,y=sum_cat,label="New",hjust=1.1),show_guide=F)      
+        p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & 
+                                           PARM_CD== "00095" &
+                                           RESULT_MD >= (Sys.time()-new.threshold)),
+                             aes(x=RESULT_VA,y=sum_an,label="New",hjust=1.1),show_guide=F)      
+      }else{}
+      
+      }
     p1 <- p1 + ylab(paste(ylabel,"\n")) + xlab("Specific conducatance")
     p1 <- p1 + labs(color='Sum ions')
     p1 <- p1 + scale_shape_manual("Chemistry status",values = qual.shapes)
@@ -47,13 +78,7 @@ iscsumplot <- function(qw.data,
     ###Remove lines from symbol and color legends
     p1 <- p1 + guides(shape = guide_legend(override.aes = list(fill = NA))) + guides(color = guide_legend(override.aes = list(fill = NA)))
     #p1 <- p1 + labs(linetype="Acceptable sum(ion)/Sc range")
-    if(nrow(subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & PARM_CD== "00095" & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
-    {
-      p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO %in% iscsum.site.selection & 
-                                         PARM_CD== "00095" &
-                                         RESULT_MD >= (Sys.time()-new.threshold)),
-                           aes(x=sum_cat,y=perc.diff,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
-    }else{}
+    
     
     p1 <- p1 + theme_USGS() + ggtitle(maintitle)
     

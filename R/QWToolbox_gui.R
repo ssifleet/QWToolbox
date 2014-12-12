@@ -10,7 +10,9 @@ qwtoolbox <- function(...){
 
   ###Initialize variables
   preferences()
-  .guiEnv$flagged.samples <- character()
+  .guiEnv$flagged.samples <- data.frame(RECORD_NO = character(),
+                                        FLAG_WHERE = character())
+  
   ##################
   ###Main window
   ##################

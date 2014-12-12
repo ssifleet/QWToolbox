@@ -20,6 +20,9 @@ iparmbox_gui <- function(...){
                                                                                                          iparmbox.plotparm = svalue(.guiEnv$iparmbox.plotparm),
                                                                                                          iparmbox.show.points = svalue(.guiEnv$iparmbox.show.points),
                                                                                                          iparmbox.log.scale = svalue(.guiEnv$iparmbox.log.scale))})
+
+                                                                                                         
+###No manual flagging for box plots, flagger function not good enough to disginguish points on box plots. Will be flagged automatically based on quartile range
   
   ###Save plot
   

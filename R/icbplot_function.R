@@ -26,14 +26,20 @@ icbplot <- function(qw.data,
   p1 <- p1 + scale_colour_manual("Medium code",values = medium.colors)
   p1 <- p1 + scale_shape_manual("Chemistry status",values = qual.shapes)
   p1 <- p1 + scale_x_datetime(limits=c(as.POSIXct((icb.begin.date.slider)),as.POSIXct((icb.end.date.slider))))
-  
-  if(nrow(subset(qw.data$PlotTable,SITE_NO %in% icb.site.selection & !duplicated(RECORD_NO) == TRUE & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+  if(nrow(subset(qw.data$PlotTable, SITE_NO %in% (icb.site.selection) &
+                                                     !duplicated(RECORD_NO) == TRUE & 
+                                                     RESULT_MD >= (Sys.time()-new.threshold))) > 0)
   {
-    p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO == icb.site.selection & 
+    if(all(is.finite(qw.data$PlotTable$perc.diff[which(qw.data$PlotTable$SITE_NO %in% (icb.site.selection) &
+                                                          !duplicated(qw.data$PlotTable$RECORD_NO) == TRUE & 
+                                                          qw.data$PlotTable$RESULT_MD >= (Sys.time()-new.threshold))])))
+      {
+            p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO == icb.site.selection & 
                                        !duplicated(RECORD_NO) == TRUE &
                                        RESULT_MD >= (Sys.time()-new.threshold)),
                          aes(x=SAMPLE_START_DT,y=perc.diff,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
-  }else{}
+      }else{}
+  } else{}
   
   p1 <- p1 + theme_USGS() + theme(axis.text.x = element_text(angle = 90)) + ggtitle(maintitle)
   p1 <- p1 + geom_hline(data = hline,aes(yintercept = yint,linetype=Imbalance),show_guide=TRUE) 

@@ -34,13 +34,28 @@ icbparmplot <- function(qw.data,
   p1 <- p1 + scale_y_continuous(limits=c(-100,100))
   p1 <- p1 + scale_colour_manual("Medium code",values = medium.colors)
   p1 <- p1 + scale_shape_manual("Chemistry status",values = qual.shapes)
-  if(nrow(subset(qw.data$PlotTable,SITE_NO == icbparm.site.selection & PARM_CD==icbparm.plotparm & RESULT_MD >= (Sys.time()-new.threshold))) > 0)
+
+  if(nrow(subset(qw.data$PlotTable,SITE_NO %in% svalue(.guiEnv$icbparm.site.selection) &
+                PARM_CD==svalue(.guiEnv$icbparm.plotparm) & 
+                RESULT_MD >= (Sys.time()-svalue(.guiEnv$new.threshold)))) > 0)
   {
+    if(all(is.finite(qw.data$PlotTable$perc.diff[
+          which(qw.data$PlotTable$SITE_NO %in% icbparm.site.selection &
+          qw.data$PlotTable$PARM_CD==icbparm.plotparm & 
+          qw.data$PlotTable$RESULT_MD >= (Sys.time()-new.threshold))])) == TRUE) 
+    {
+      
     p1 <- p1 + geom_text(data=subset(qw.data$PlotTable,SITE_NO == icbparm.site.selection & 
-                                       PARM_CD==icbparm.plotparm & 
-                                       RESULT_MD >= (Sys.time()-new.threshold)),
-                         aes(x=RESULT_VA,y=perc.diff,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F)      
+                                     PARM_CD==icbparm.plotparm & 
+                                     RESULT_MD >= (Sys.time()-new.threshold)),
+                       aes(x=RESULT_VA,y=perc.diff,color = MEDIUM_CD,label="New",hjust=1.1),show_guide=F) 
+    } else{}
   }else{}
+
+    
+       
+     
+  
   p1 <- p1 + theme_USGS()  + ggtitle(maintitle)
   p1 <- p1 + geom_hline(data = hline,aes(yintercept = yint,linetype=Imbalance),show_guide=TRUE) 
   

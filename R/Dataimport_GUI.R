@@ -84,7 +84,11 @@ gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,
               .guiEnv$end.date = as.POSIXct(svalue(.guiEnv$enddate))
             } else{.guiEnv$begin.date = svalue(.guiEnv$begindate)
                    .guiEnv$end.date =svalue(.guiEnv$enddate)}
-           
+          
+          ###Popup to tell user to wait for data import
+          popwin <- gwindow()
+          glabel("PLEASE WAIT, DATA IMPORT IN PROGRESS",container = popwin)
+          
             ###Run the NWIS puller function to get data out of NWIS internal
           .guiEnv$qw.data <-NWISPullR(DSN = svalue(.guiEnv$dlserver.name),
                                       env.db = svalue(.guiEnv$env.db.num),
@@ -94,8 +98,8 @@ gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,
                                       parm.group.check = .guiEnv$parm.group.check,
                                       begin.date = as.POSIXct(svalue(.guiEnv$begindate)),
                                      end.date = as.POSIXct(svalue(.guiEnv$enddate)))
-          
-          ###Deletes previous notebook and reloads so that all tabs depending on pulled data are refreshed. 
+          ###close popup
+          dispose(popwin)
           
           ###Grab svalue of chargebalanceb efore close
           .guiEnv$do.calc.balance <- svalue(.guiEnv$calc.balance)
@@ -120,9 +124,9 @@ gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,
          tables_gui()
           
           ###################
-          ###DQI Tab
+          ###UPLOAD TAB
           ###################
-         
+         NWISuploadR_gui()
           #####Load up plotting gui tabs  
                   
           itsplot_gui()
@@ -132,6 +136,11 @@ gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,
           matrixplot_gui()
             ###Check for ion balanace and run funciton
             if(svalue(.guiEnv$calc.balance) == TRUE){
+              
+              ###Popup to tell user to wait for charge balance
+              popwin <- gwindow()
+              glabel("PLEASE WAIT, CALCULATING CHARGE BALANCE",container = popwin)
+              
               ###Run ion balance function
               .guiEnv$chargebalance.table <- ionbalance(qw.data = .guiEnv$qw.data)
               ###Join charge balance table to plot table
@@ -140,7 +149,9 @@ gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,
               .guiEnv$qw.data$BalanceDataTable <- dcast(.guiEnv$chargebalance.table, RECORD_NO + sum_cat + sum_an +perc.diff + complete.chem ~ Element,value.var = "charge")
               ####Add in site meta data
               .guiEnv$qw.data$BalanceDataTable <- join(.guiEnv$qw.data$DataTable[c("SITE_NO","STATION_NM","SAMPLE_START_DT","SAMPLE_END_DT","MEDIUM_CD","RECORD_NO")],.guiEnv$qw.data$BalanceDataTable,by="RECORD_NO")
-              
+            
+              dispose(popwin)
+            
             icbplot_gui()
             iscsumplot_gui()
             icbparmplot_gui()

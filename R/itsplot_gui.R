@@ -43,7 +43,30 @@ visible(.guiEnv$its.mainGroup) <- FALSE
   })
     
     
-  ###Save plot
+###Flag sample
+gbutton(text="Flag sample",container = .guiEnv$its.vargroup,handler = function(h,...) {
+  ###Refresh plot so that viewport exists
+  itsplot(qw.data = .guiEnv$qw.data,
+          new.threshold = .guiEnv$new.threshold,
+          its.site.selection = svalue(.guiEnv$its.site.selection),
+          its.plotparm = svalue(.guiEnv$its.plotparm),
+          its.begin.date.slider = svalue(.guiEnv$its.begin.date.slider),
+          its.end.date.slider = svalue(.guiEnv$its.end.date.slider),
+          its.show.q = svalue(.guiEnv$its.show.q),
+          its.show.smooth = svalue(.guiEnv$its.show.smooth))
+  ###get a dataframe identical to the one used by the plot to pass to flagger function
+  data <- subset(.guiEnv$qw.data$PlotTable,SITE_NO %in% svalue(.guiEnv$its.site.selection) & 
+                   PARM_CD==svalue(.guiEnv$its.plotparm))
+  x <- as.numeric(data$SAMPLE_START_DT)
+  y <- data$RESULT_VA
+  
+  ###run flagger function. This returns the row index of the sample which is used to grab the record number
+  row.index <- flagger(data=data,x=x,y=y)
+  .guiEnv$flagged.samples <-  rbind(.guiEnv$flagged.samples,data.frame(RECORD_NO = data$RECORD_NO[row.index],FLAG_WHERE="Timeseries"))
+  
+})   
+
+###Save plot
   
   gbutton(text="Export Plot", container = .guiEnv$its.vargroup,handler = function(h,...) {
     saveplot()
