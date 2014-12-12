@@ -1,14 +1,8 @@
-#DSN = svalue(.guiEnv$dlserver.name)
-# env.db = svalue(.guiEnv$env.db.num)
-# qa.db = svalue(.guiEnv$qa.db.num)
-# STAIDS = .guiEnv$STAIDS
-# dl.parms = .guiEnv$dl.parms
-# parm.group.check = .guiEnv$parm.group.check
-# begin.date = as.POSIXct(svalue(.guiEnv$begindate))
-# end.date = as.POSIXct(svalue(.guiEnv$enddate))
+
 
 NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.check = FALSE,begin.date,end.date)
 {
+  odbcCloseAll()
   #Change to a list that SQL can understand. SQL requires a parenthesized list of expressions, so must look like c('05325000', '05330000') for example
   STAID.list <- paste("'", STAIDS, "'", sep="", collapse=",")
   
@@ -63,11 +57,19 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   Sample_meta$start.date.offset <- Sample_meta$SAMPLE_START_DT + Sample_meta$offset
   ###Format times from GMT to appropriate time zone
   ###Using a loop because I could not figure out how to vectorize it, perhaps "mapply" would work, but don't know
-  for ( i in 1:nrow(Sample_meta))
+  if(nrow(Sample_meta) != 0)
   {
-    ###Converts to time zone
-    Sample_meta$start.date.adj[i] <- format(Sample_meta$start.date.offset[i],"%Y-%m-%d %H:%M:%S", tz=as.character(Sample_meta$SAMPLE_START_TZ_CD[i]))
-  }
+    for ( i in 1:nrow(Sample_meta))
+    {
+      ###Converts to time zone
+      if(is.na(Sample_meta$SAMPLE_START_TZ_CD[i]))
+      {
+        Sample_meta$start.date.adj[i] <- format(Sample_meta$start.date.offset[i],"%Y-%m-%d %H:%M:%S", tz=as.character(Sys.timezone()))
+      }else{
+        Sample_meta$start.date.adj[i] <- format(Sample_meta$start.date.offset[i],"%Y-%m-%d %H:%M:%S", tz=as.character(Sample_meta$SAMPLE_START_TZ_CD[i]))
+      }  
+    }
+  } else{}
   
   Sample_meta$SAMPLE_START_DT <- Sample_meta$start.date.adj 
   Sample_meta$start.date.adj <- NULL
@@ -153,12 +155,19 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   Sample_meta$start.date.offset <- Sample_meta$SAMPLE_START_DT + Sample_meta$offset
   ###Format times from GMT to appropriate time zone
   ###Using a loop because I could not figure out how to vectorize it, perhaps "mapply" would work, but don't know
-  for ( i in 1:nrow(Sample_meta))
+  if(nrow(Sample_meta) != 0)
   {
-    ###Converts to time zone
-    Sample_meta$start.date.adj[i] <- format(Sample_meta$start.date.offset[i],"%Y-%m-%d %H:%M:%S", tz=as.character(Sample_meta$SAMPLE_START_TZ_CD[i]))
-  }
-  
+    for ( i in 1:nrow(Sample_meta))
+      {
+        ###Converts to time zone
+        if(is.na(Sample_meta$SAMPLE_START_TZ_CD[i]))
+        {
+        Sample_meta$start.date.adj[i] <- format(Sample_meta$start.date.offset[i],"%Y-%m-%d %H:%M:%S", tz=as.character(Sys.timezone()))
+        }else{
+        Sample_meta$start.date.adj[i] <- format(Sample_meta$start.date.offset[i],"%Y-%m-%d %H:%M:%S", tz=as.character(Sample_meta$SAMPLE_START_TZ_CD[i]))
+        }  
+      }
+  } else{}
   Sample_meta$SAMPLE_START_DT <- Sample_meta$start.date.adj 
   Sample_meta$start.date.adj <- NULL
   Sample_meta$offset <- NULL
@@ -180,6 +189,8 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   } else {Results <- subset(Results, PARM_CD %in% dl.parms)}
  
   #Make dataframe as record number and pcode. MUST HAVE ALL UNIQUE PCODE NAMES
+  if(nrow(Results) != 0)
+  {
   DataTable2 <- dcast(Results, RECORD_NO ~ PARM_NM,value.var = "Val_qual")
   
   #fill in record number meta data (statoin ID, name, date, time)
@@ -190,9 +201,16 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   metacols <- seq(from = ncol(DataTable2)-4, to =ncol(DataTable2))
   DataTable2 <- DataTable2[c(metacols,parmcols)]
   PlotTable2 <- join(Results,Sample_meta,by="RECORD_NO")
+  }else{}
   
+  if(exists("DataTable2"))
+  {
   DataTable <- rbind.fill(DataTable1,DataTable2)
   PlotTable <- rbind.fill(PlotTable1,PlotTable2)
+  } else{
+    DataTable <- DataTable1
+    PlotTable <-PlotTable1
+  }
   PlotTable$REMARK_CD <- gsub("NA","",PlotTable$REMARK_CD)
   PlotTable$SAMPLE_START_DT <- as.POSIXct(PlotTable$SAMPLE_START_DT)
   PlotTable$REMARK_CD[is.na(PlotTable$REMARK_CD)] <- "Sample"
@@ -202,7 +220,9 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   ###Get month for seasonal plots and reorder factor levels to match water-year order
   PlotTable$SAMPLE_MONTH <-  factor(format(PlotTable$SAMPLE_START_DT,"%b"),levels=c("Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"))
 
-  # Close the connection
+    
+
+
 
   
   
