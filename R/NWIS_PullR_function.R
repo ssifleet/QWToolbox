@@ -30,9 +30,39 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   Samples <- subset(Samples, SAMPLE_START_DT >= begin.date & SAMPLE_START_DT <= end.date)
   }else {} 
   #get the QWResult file using the record numbers
-  records.list <- paste("'", Samples$RECORD_NO, "'", sep="", collapse=",")
-  Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
-  Results <- sqlQuery(Chan1, Query, as.is=T)
+  #SQL can only handle 1000 records, if longer need to do it in multiple pulls
+  if(length(Samples$RECORD_NO) <= 1000)
+  {
+    records.list <- paste("'", Samples$RECORD_NO, "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- sqlQuery(Chan1, Query, as.is=T)
+  }else if(length(Samples$RECORD_NO) > 1000 && length(Samples$RECORD_NO) <= 2000)
+  {
+    #first pull
+    records.list <- paste("'", Samples$RECORD_NO[1:1000], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- sqlQuery(Chan1, Query, as.is=T)
+    #second pull, rbinding to first pull
+    records.list <- paste("'", Samples$RECORD_NO[1001:length(Samples$RECORD_NO)], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- rbind(Results,sqlQuery(Chan1, Query, as.is=T))
+  } else if(length(Samples$RECORD_NO) > 2000 && length(Samples$RECORD_NO) <= 3000)
+  {
+    #first pull
+    records.list <- paste("'", Samples$RECORD_NO[1:1000], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- sqlQuery(Chan1, Query, as.is=T)
+    #second pull, rbinding to first pull
+    records.list <- paste("'", Samples$RECORD_NO[1001:length(Samples$RECORD_NO)], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- rbind(Results,sqlQuery(Chan1, Query, as.is=T))
+    #third pull, rbinding to first pull
+    records.list <- paste("'", Samples$RECORD_NO[2001:length(Samples$RECORD_NO)], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- rbind(Results,sqlQuery(Chan1, Query, as.is=T))
+  } 
+  
+  
   Results$Val_qual <- paste(Results$RESULT_VA,Results$REMARK_CD, sep = " ")
   Results$Val_qual <- gsub("NA","",Results$Val_qual)
   
@@ -124,9 +154,38 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   }else {} 
   
   #get the QWResult file using the record numbers
-  records.list <- paste("'", Samples$RECORD_NO, "'", sep="", collapse=",")
-  Query <- paste("select * from ", DSN, ".QW_RESULT_",qa.db," where record_no IN (", records.list, ")", sep="")
-  Results <- sqlQuery(Chan1, Query, as.is=T)
+  #SQL can only handle 1000 records, if longer need to do it in multiple pulls
+  if(length(Samples$RECORD_NO) <= 1000)
+  {
+    records.list <- paste("'", Samples$RECORD_NO, "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- sqlQuery(Chan1, Query, as.is=T)
+  }else if(length(Samples$RECORD_NO) > 1000 && length(Samples$RECORD_NO) <= 2000)
+  {
+    #first pull
+    records.list <- paste("'", Samples$RECORD_NO[1:1000], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- sqlQuery(Chan1, Query, as.is=T)
+    #second pull, rbinding to first pull
+    records.list <- paste("'", Samples$RECORD_NO[1001:length(Samples$RECORD_NO)], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- rbind(Results,sqlQuery(Chan1, Query, as.is=T))
+  } else if(length(Samples$RECORD_NO) > 2000 && length(Samples$RECORD_NO) <= 3000)
+  {
+    #first pull
+    records.list <- paste("'", Samples$RECORD_NO[1:1000], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- sqlQuery(Chan1, Query, as.is=T)
+    #second pull, rbinding to first pull
+    records.list <- paste("'", Samples$RECORD_NO[1001:length(Samples$RECORD_NO)], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- rbind(Results,sqlQuery(Chan1, Query, as.is=T))
+    #third pull, rbinding to first pull
+    records.list <- paste("'", Samples$RECORD_NO[2001:length(Samples$RECORD_NO)], "'", sep="", collapse=",")
+    Query <- paste("select * from ", DSN, ".QW_RESULT_",env.db," where record_no IN (", records.list, ")", sep="")
+    Results <- rbind(Results,sqlQuery(Chan1, Query, as.is=T))
+  } 
+  
   Results$Val_qual <- paste(Results$RESULT_VA,Results$REMARK_CD, sep = " ")
   Results$Val_qual <- gsub("NA","",Results$Val_qual)
   
