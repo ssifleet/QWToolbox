@@ -247,7 +247,9 @@ ion.charges$perc.diff <- (ion.charges$sum_cat-ion.charges$sum_an)/(ion.charges$s
 
 ion.charges$RECORD_NO <- unique(qw.data$PlotTable$RECORD_NO[which(qw.data$PlotTable$RECORD_NO == ionbalance.records[i])])
 ion.charges$RECORD_NO <- unique(qw.data$PlotTable$RECORD_NO[which(qw.data$PlotTable$RECORD_NO == ionbalance.records[i])])
-if(0 %in% ion.charges$charge[which(ion.charges$Element != "F")])
+if(0 %in% ion.charges$charge[which(ion.charges$Element != "F"| 
+                                     ion.charges$Element != "Fe"|
+                                     ion.charges$Element != "Mn")])
 {
 ion.charges$complete.chem <- "Incomplete"
 } else {ion.charges$complete.chem <- "Complete"}

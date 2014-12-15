@@ -65,7 +65,7 @@ gbutton(text="Import data", container=.guiEnv$outerdatatab,handler = function(h,
               .guiEnv$parm.group.check <- TRUE
               if(svalue(.guiEnv$parm.group,index=TRUE) != 1)
               {
-                .guiEnv$dl.parms <- nwis.parm.groups[svalue(.guiEnv$parm.group,index=TRUE)]
+                .guiEnv$dl.parms <- .guiEnv$nwis.parm.groups[svalue(.guiEnv$parm.group,index=TRUE)]
               } else {.guiEnv$dl.parms <- "All"}
             } else if(svalue(.guiEnv$pcode.method, index=TRUE) == 2)
             {
