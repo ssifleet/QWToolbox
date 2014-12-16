@@ -1,4 +1,15 @@
-
+#' Parameter timeseries plot
+#' 
+#' Takes output data object from NWISPullR and prints a plot of parameter vs time.
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @param new.threshold The threshold value in seconds from current system time for "new" data.
+#' @param its.site.selection A character vector of site IDs to plot
+#' @param its.plotpam A character vector of parameters to plot
+#' @param its.begin.date.slider Character string of begining date range to plot (yyyy-mm-dd)
+#' @param its.end.date.slider Character string of ending date range to plot (yyyy-mm-dd)
+#' @param its.show.q Logical to plot instantaneous hydrograph
+#' @param its.show.smooth Logical to add a loess smooth to plot
+#' @export
 
 itsplot <- function(qw.data,
                    new.threshold,
@@ -9,8 +20,8 @@ itsplot <- function(qw.data,
                     its.show.q,
                     its.show.smooth){
   ## Sets color to medium code name, not factor level, so its consistant between all plots regardles of number of medium codes in data
-  medium.colors <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#D55E00")
-  names(medium.colors) <- c("WS ","WG ","WSQ","WGQ","OAQ")
+  medium.colors <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#D55E00","#D55E00")
+  names(medium.colors) <- c("WS ","WG ","WSQ","WGQ","OAQ","OA ")
   ## Sets color to medium code name, not factor level, so its consistant between all plots regardles of number of medium codes in data
   qual.shapes <- c(19,0,2,5)
   names(qual.shapes) <- c("Sample","<",">","E")

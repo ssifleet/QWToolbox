@@ -1,3 +1,14 @@
+#' Chargebalance timeseries plot
+#' 
+#' Takes output data object from NWISPullR and prints a plot of charge balance vs time. Requires charge balance = TRUE in NWISPullR
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @param new.threshold The threshold value in seconds from current system time for "new" data.
+#' @param icb.site.selection A character vector of site IDs to plot
+#' @param icb.begin.date.slider Character string of begining date range to plot (yyyy-mm-dd)
+#' @param icb.end.date.slider Character string of ending date range to plot (yyyy-mm-dd)
+#' @param icb.show.smooth Add a loess smooth to plot
+#' @export
+
 icbplot <- function(qw.data,
                     new.threshold,
                     icb.site.selection,

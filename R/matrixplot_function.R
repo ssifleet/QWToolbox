@@ -1,3 +1,11 @@
+#' Parameter matrix plot
+#' 
+#' Takes output data object from NWISPullR and prints a parameter matrix plot
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @param matrix.site.selection A character vector of site IDs to plot
+#' @param matrix.plotparm A character vector of parameters to plot
+#' @export
+
 matrixplot <- function(qw.data,
                         matrix.site.selection,
                        matrix.plotparm){
