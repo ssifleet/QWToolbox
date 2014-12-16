@@ -15,6 +15,7 @@
 NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.check = FALSE,begin.date,end.date)
 {
   odbcCloseAll()
+
   #Change to a list that SQL can understand. SQL requires a parenthesized list of expressions, so must look like c('05325000', '05330000') for example
   STAID.list <- paste("'", STAIDS, "'", sep="", collapse=",")
   
@@ -136,7 +137,7 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
 
   
   #Make dataframe as record number and pcode. MUST HAVE ALL UNIQUE PCODE NAMES
-  DataTable1 <- dcast(Results, RECORD_NO ~ PARM_NM ,value.var = c("Val_qual"))
+  DataTable1 <- dcast(Results, RECORD_NO ~ PARM_CD ,value.var = c("Val_qual"))
   
   #fill in record number meta data (statoin ID, name, date, time)
   DataTable1 <- join(DataTable1,Sample_meta, by="RECORD_NO")
@@ -262,7 +263,7 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
   #Make dataframe as record number and pcode. MUST HAVE ALL UNIQUE PCODE NAMES
   if(nrow(Results) != 0)
   {
-  DataTable2 <- dcast(Results, RECORD_NO ~ PARM_NM,value.var = "Val_qual")
+  DataTable2 <- dcast(Results, RECORD_NO ~ PARM_CD,value.var = "Val_qual")
   
   #fill in record number meta data (statoin ID, name, date, time)
   DataTable2 <- join(DataTable2,Sample_meta, by="RECORD_NO")
@@ -282,7 +283,7 @@ NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.
     DataTable <- DataTable1
     PlotTable <-PlotTable1
   }
-  PlotTable$REMARK_CD <- gsub("NA","",PlotTable$REMARK_CD)
+  PlotTable$REMARK_CD <- gsub(NA,"",PlotTable$REMARK_CD)
   PlotTable$SAMPLE_START_DT <- as.POSIXct(PlotTable$SAMPLE_START_DT)
   PlotTable$REMARK_CD[is.na(PlotTable$REMARK_CD)] <- "Sample"
   PlotTable$REMARK_CD <- as.factor(PlotTable$REMARK_CD)
