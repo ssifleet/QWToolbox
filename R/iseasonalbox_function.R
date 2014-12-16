@@ -1,3 +1,14 @@
+#' Seasonal boxplot
+#' 
+#' Takes output data object from NWISPullR and prints a boxplot of a parameter by month.
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @param new.threshold The threshold value in seconds from current system time for "new" data.
+#' @param iseasonalbox.site.selection A character vector of site IDs to plot
+#' @param iseasonalbox.plotparm A character vector of parameters to plot
+#' @param iseasonalbox.show.points A logical to show points on plot
+#' @param iseasonalbox.log.scale A logical to plot y axis on log scale
+#' @export
+
 iseasonalbox <- function(qw.data,
                          new.threshold,
                          iseasonalbox.site.selection,

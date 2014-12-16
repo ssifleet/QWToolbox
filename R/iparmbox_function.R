@@ -1,3 +1,14 @@
+#' Parameter boxplot
+#' 
+#' Takes output data object from NWISPullR and prints a boxplot of parameters
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @param new.threshold The threshold value in seconds from current system time for "new" data.
+#' @param iparmbox.site.selection A character vector of site IDs to plot
+#' @param iparmbox.plotparm A character vector of pcodes to plot
+#' @param iparmbox.show.points Show samples points
+#' @param iparmbox.log.scale Plot y axis on a log scale
+#' @export
+
 iparmbox <- function(qw.data,
                       new.threshold,
                      iparmbox.site.selection,

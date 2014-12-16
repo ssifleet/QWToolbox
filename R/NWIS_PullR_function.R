@@ -1,3 +1,15 @@
+#' Function to pull data from NWIS
+#' 
+#' Pulls data from NWIS internal servers using ODBC connection and returns a qw.data object.
+#' @param DSN A character string containing the DSN for your local server
+#' @param env.db A character string containing the database number of environmental samples
+#' @param qa.db A character string containing the database number of QA samples
+#' @param STAIDS A character vector of stations IDs to pull data
+#' @param dl.parms A character vector of pcodes to pull data
+#' @param parm.group.check A logical of weather or not to use NWIS parameter groups. If TRUE, must use NWIS parameter group names in dl.parms
+#' @param begin.date Character string containing beginning date of data pull (yyyy-mm-dd)
+#' @param end.date Character string containing ending date of data pull (yyyy-mm-dd)
+#' @export
 
 
 NWISPullR <- function(DSN,env.db = "01",qa.db = "02",STAIDS,dl.parms,parm.group.check = FALSE,begin.date,end.date)

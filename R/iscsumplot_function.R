@@ -1,3 +1,12 @@
+#' Sum anions vs conductance plot
+#' 
+#' Takes output data object from NWISPullR and prints a plot of sum ions vs. conductance. Requires charge balance = TRUE in NWISPullR
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @param new.threshold The threshold value in seconds from current system time for "new" data.
+#' @param iscsum.site.selection A character vector of site IDs to plot
+#' @param iscsum.plotparm A character string of parameters to plot. Options are "Cations", "Anions", "Both"
+#' @export
+
 iscsumplot <- function(qw.data,
                        new.threshold,
                        iscsum.site.selection,

@@ -1,8 +1,18 @@
-
-#############################################################################
-#############This is the function for perofrming hte upload, compile this####
-#############DO NOT TOUCH!!, NO USER EDITS ARE NEEDED BELOW THIS POINT#######
-#############################################################################
+#' NWISUploader formats files for upload into QWData
+#' 
+#' Assists in formatting data for upload into QWData. Use Excell spreadsheet templates to create labfile and pcode file.
+#' @param qwsampletype Numeric of type of qwsample file. Options 1: Pull qwsample form NWIS, 2:QWSample from file, 3: batch qwsample file
+#' @param DSN Character string containing local NWIS server name
+#' @param labfile Character string containing path to the labfile, must be .csv format
+#' @param pcodefile Character string containing path to the pcodefile, must be .csv format
+#' @param qwsamplefile Character string containing path to the qwsample file if using qwsampletype = 2, must be .csv format
+#' @param qwresultname Character string containing output path for the qwresult file
+#' @param qwsamplename Character string containing output path for the qwsample file
+#' @param qwsample.begin.date Character string (yyyy-mm-dd) of beggining date to subset qwsample file to
+#' @param qwsample.end.date Character string (yyyy-mm-dd) of ending date to subset qwsample file to
+#' @param censor Logical. If TRUE results are censored to lrl provided in pcode file
+#' @export
+#' 
 nwisupload <- function(qwsampletype,
                        DSN = "NWISCO",
                        labfile,

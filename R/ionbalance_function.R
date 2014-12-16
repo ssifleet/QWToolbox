@@ -1,3 +1,9 @@
+#' Ion balance
+#' 
+#' Takes output data object from NWISPullR and calculates a QWData standard ion charge balance.
+#' @param qw.data A qw.data object generated from NWISPullR
+#' @export
+
 ionbalance <- function(qw.data) {
 
 ###QWData ion balance factors and priorities
