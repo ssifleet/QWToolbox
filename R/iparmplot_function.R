@@ -36,11 +36,11 @@ iparmplot <- function(qw.data,
   remove(ypp.plot.data)
   
   ###Make the plot
-  p1 <- ggplot(data=pp.plot.data,aes(x=RESULT_VA_X,y=RESULT_VA_Y,color = MEDIUM_CD))
-  p1 <- p1 + geom_point(size=3)
+  p1 <- ggplot(data=pp.plot.data)
+  p1 <- p1 + geom_point(aes(x=RESULT_VA_X,y=RESULT_VA_Y,color = MEDIUM_CD),size=3)
   p1 <- p1 + ylab(paste(ylabel,"\n")) + xlab(paste("\n",xlabel))
   p1 <- p1 + scale_colour_manual("Medium code",values = medium.colors)
-
+  p1 <- p1 + stat_ellipse(aes(x=RESULT_VA_X,y=RESULT_VA_Y),level=0.999,type="t")
   ##Check for new samples and label them. Tried ifelse statement for hte label but it did no recognize new.threshol as a variable for some reason
   if(nrow(subset(pp.plot.data, RESULT_MD_X >= (Sys.time()-new.threshold) | RESULT_MD_Y >= (Sys.time()-new.threshold))) > 0)
   {
@@ -53,7 +53,7 @@ iparmplot <- function(qw.data,
   
   
   if((iparm.show.lm)==TRUE){
-    p2 <- p1 + geom_smooth(data=subset(pp.plot.data, MEDIUM_CD %in%c("WS ","WG ")),method="lm",formula=y~x)
+    p2 <- p1 + geom_smooth(data=subset(pp.plot.data, MEDIUM_CD %in%c("WS ","WG ")),aes(x=RESULT_VA_X,y=RESULT_VA_Y),method="lm",formula=y~x)
     p2 <- p2 + xlab(paste("\n",xlabel,"\n",lm_eqn(subset(pp.plot.data, MEDIUM_CD %in%c("WS ","WG ")))))
     print(p2)
   } else{print(p1)}  
