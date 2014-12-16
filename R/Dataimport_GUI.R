@@ -289,9 +289,9 @@ gbutton("Edit favorites",horizontal = FALSE,container=.guiEnv$fpcode.frame,
           .guiEnv$edit.pcodes <- gdf(container = .guiEnv$popwin, items=.guiEnv$pcodes,expand=TRUE) ###gdf editor for pcodes table object. This must be 
           gbutton("Update table",horizontal = FALSE,container=.guiEnv$popwin, 
                   handler =  function(h,...) {
-                    delete(.guiEnv$fpcode.frame,favpcodes)
+                    delete(.guiEnv$fpcode.frame,.guiEnv$favpcodes)
                     .guiEnv$pcodes <- as.character(.guiEnv$edit.pcodes[,1])
-                    .guiEnv$favpcodes <- gtable(items = .guiEnv$pcodes,multiple=TRUE,container = fpcode.frame, expand = TRUE, fill = TRUE)
+                    .guiEnv$favpcodes <- gtable(items = .guiEnv$pcodes,multiple=TRUE,container = .guiEnv$fpcode.frame, expand = TRUE, fill = TRUE)
                     dispose(.guiEnv$popwin) 
                   }
           )
