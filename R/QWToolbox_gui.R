@@ -32,13 +32,13 @@ qwtoolbox <- function(...){
     .guiEnv$IDprefs.file <- gfilebrowse(container = popwin.frame,text = "Select site ID file...",quote = FALSE)
     
     gbutton("Save favorite site list",container=popwin.frame,handler = function(...){
-      write.csv(.guiEnv$siteIDs,file=svalue(.guiEnv$IDprefs.file),row.names=FALSE,col.names=FALSE)
+      write.csv(.guiEnv$siteIDs,file=svalue(.guiEnv$IDprefs.file),row.names=FALSE)
       })
     glabel("pCode filename",container = popwin.frame)
     .guiEnv$pCodeprefs.file <- gfilebrowse(container = popwin.frame,text = "Select site ID file...",quote = FALSE)
     
     gbutton("Save favorite pCode list",container=popwin.frame,handler = function(...){
-      write.csv(.guiEnv$pcodes,file=svalue(.guiEnv$pCodeprefs.file),row.names=FALSE,col.names=FALSE)
+      write.csv(.guiEnv$pcodes,file=svalue(.guiEnv$pCodeprefs.file),row.names=FALSE)
     })
     })
 
@@ -50,7 +50,7 @@ qwtoolbox <- function(...){
     .guiEnv$IDprefs.file <- gfilebrowse(container = popwin.frame,text = "Select site ID file...",quote = FALSE)
     
     gbutton("Open favorite site list",container=popwin.frame,handler = function(...){
-      .guiEnv$siteIDs <- read.csv(file = svalue(.guiEnv$IDprefs.file), header=F,colClasses = "character")
+      .guiEnv$siteIDs <- read.csv(file = svalue(.guiEnv$IDprefs.file), header=T,colClasses = "character")
       names(.guiEnv$siteIDs) <- "SiteIDs"
       delete(.guiEnv$fsite.frame,.guiEnv$favsites)
       .guiEnv$favsites <- gtable(items = .guiEnv$siteIDs,multiple=TRUE,container = .guiEnv$fsite.frame, expand = TRUE, fill = TRUE)
@@ -59,7 +59,7 @@ qwtoolbox <- function(...){
     .guiEnv$pCodeprefs.file <- gfilebrowse(container = popwin.frame,text = "Select site ID file...",quote = FALSE)
     
     gbutton("Open favorite pCode list",container=popwin.frame,handler = function(...){
-      .guiEnv$pcodes <- read.csv(file=svalue(.guiEnv$pCodeprefs.file), header=F,colClasses = "character")
+      .guiEnv$pcodes <- read.csv(file=svalue(.guiEnv$pCodeprefs.file), header=T,colClasses = "character")
       names(.guiEnv$pcodes) <- "pCodes"
       delete(.guiEnv$fpcode.frame,.guiEnv$favpcodes)
       .guiEnv$favpcodes <- gtable(items = .guiEnv$pcodes,multiple=TRUE,container = .guiEnv$fpcode.frame, expand = TRUE, fill = TRUE)

@@ -7,8 +7,8 @@
 ionbalance <- function(qw.data) {
 
 ###QWData ion balance factors and priorities
-ion.balance.data <- read.csv("Data/ionbalance.csv",header=TRUE,colClasses=c("character","character","numeric","character"))
-
+#ion.balance.data <- read.csv("Data/ionbalance.csv",header=TRUE,colClasses=c("character","character","numeric","character"))
+#load("ion.balance.data.rda")
 ###List of unique records
 ionbalance.records <- unique(qw.data$PlotTable$RECORD_NO)
 chargebalance.table <- data.frame()
