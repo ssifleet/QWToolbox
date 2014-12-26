@@ -48,7 +48,7 @@ install.packages("RGtk2")
 ```
 This will download and install the RGtk2 GUI package on your machine. If you do not have Gtk libraries installed on your machine, the package installer for RGtk2 will prompt you to download and install them. Select "install Gtk" in the popup dialog box and click OK. There is a bug on some machines where RGtk2 does no install the libraries correctly. If the RGtk2 installer fails, re-type  the "install.packages" command above but when the prompt appears for downloading the Gtk libraries, click "cancel". It will reappear and this time click "OK". 
 
-This is a bug in the Gtk library isntaller, and is not maintained by the author of QWToolbox. Hopefully, this will be resolved for the first QWToolbox version
+This is a bug in the Gtk library isntaller, and is not maintained by the author of QWToolbox. Hopefully, this will be resolved for the first QWToolbox version.
 
 ###Step 4. Install the "devtools" package for installing QWToolbox directly from Github.
 
@@ -60,11 +60,20 @@ This will install the devtools package on your machine. If an error appears abou
 
 ###Step 5. Install the QWToolbox package from Github.
 
-Open R-studio in 32-bit mode if it is not already open and type the following command in the console:
+Open R-studio in 32-bit mode if it is not already open and type the following commands in the console:
 
 ```R
-install_github("devtools")
+library(devtools)
+install_github("USGS-R/QWToolbox",args = "--no-multiarch")
 ```
 
+This will install the QWToolbox pacakge as well as all other packages that QWToolbox relies on. It may take a minute to download and install the supporting packages durign the first installation.
 
+###Step 6. Run QWToolbox.
 
+Once QWToolbox has been successfully installed type the following commands to load the package and open the gui
+
+```R
+library(QWToolbox)
+qwtoolbox()
+```
