@@ -44,6 +44,27 @@ Click "Change" next to the R version and select "Use your machine's default vers
 
 Open R-studio in 32-bit mode and type the following command in the console:
 ```R
-	install.packages("RGtk2")
+install.packages("RGtk2")
 ```
+This will download and install the RGtk2 GUI package on your machine. If you do not have Gtk libraries installed on your machine, the package installer for RGtk2 will prompt you to download and install them. Select "install Gtk" in the popup dialog box and click OK. There is a bug on some machines where RGtk2 does no install the libraries correctly. If the RGtk2 installer fails, re-type  the "install.packages" command above but when the prompt appears for downloading the Gtk libraries, click "cancel". It will reappear and this time click "OK". 
+
+This is a bug in the Gtk library isntaller, and is not maintained by the author of QWToolbox. Hopefully, this will be resolved for the first QWToolbox version
+
+###Step 4. Install the "devtools" package for installing QWToolbox directly from Github.
+
+Open R-studio in 32-bit mode if it is not already open and type the following command in the console:
+```R
+install.packages("devtools")
+```
+This will install the devtools package on your machine. If an error appears about "Rtools not installed", ignore this message, Rtools is not required for the devtools functions you will use.
+
+###Step 5. Install the QWToolbox package from Github.
+
+Open R-studio in 32-bit mode if it is not already open and type the following command in the console:
+
+```R
+install_github("devtools")
+```
+
+
 
