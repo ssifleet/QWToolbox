@@ -2,8 +2,8 @@ QWToolbox
 ===
 
 Toolbox for discrete water-quality data review and exploration. 
-This is an itial beta version for testing purposes with limited documentation or support.
-User are incouraged to post any bugs or comments for additional functionality on the issues page at:
+This is an initial beta version for testing purposes with limited documentation or support.
+Users are incouraged to post any bugs or comments for additional functionality on the issues page at:
 
 [QWToolbox](https://github.com/USGS-R/QWToolbox/issues)
 
@@ -124,4 +124,11 @@ The NWIS uploader requires two input files: a lab file and a pcode file. The lab
 There are 3 options for generating a QWSample file. For samples that are already logged in, for example using PCFF, select option 1. This is the preffered method and the program will pull a QWSample file from the local NWIS server based on the sample information provided in the labfile. The user can also supply their own QWSample file using option 2. Option 3 generate a basic QWSample file from a few user inputs and the sample information provided in the lab-file. 
 The lab file and pcode file must be in a specific format, and a template excel workbook is included on this site to demonstrate the formatting.
 
+##Bug reporting
 
+This is an initial beta version for testing purposes with limited documentation or support.
+Users are incouraged to post any bugs or comments for additional functionality on the issues page at:
+
+[QWToolbox](https://github.com/USGS-R/QWToolbox/issues)
+
+This page will catalog all bug reports and the user is encouraged to look here first before reporting a new bug. If it has already been reported you may comment on it, but please try to limit duplicated bug reports. 
