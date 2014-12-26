@@ -24,4 +24,10 @@ There are a number of special considerations for installation of QWToolbox beyon
 
 Below is a step-by-step installation procedur, please complete the steps in the order listed below.
 
-Step 1. Install the ODBC driver and establish the NWIS ODBC connection. Your database administrator or IT specialist  will need to assist for this step. 
+#Step 1. Install the ODBC driver and establish the NWIS ODBC connection. Your database administrator or IT specialist  will need to assist for this step. Open notepad and paste the following text:
+
+:: Set up DSN for access to NWIS database
+odbcconf.exe /A {configsysdsn "Oracle in OraClient11g_home1" "DSN=NWISWY|SERVERNAME=NWISWY|DATABASE=nwismn"}
+
+Replace all instances of "nwismn" with the name of your local NWIS server. Save the file as ODBC.bat on your desktop and double-click to run. You may delete ODBC.bat once the ODBC conncetion has been established.
+
