@@ -77,3 +77,45 @@ Once QWToolbox has been successfully installed type the following commands to lo
 library(QWToolbox)
 qwtoolbox()
 ```
+##Use instructions
+
+A comprehensive user mannual will be released with the final version 1.0, but for testing purposes a brief user guide is given below.
+
+QWToolbox is a collection of R functions that are driven by a graphical user interface (GUI). Although the gui allows the user to run the various QWToolbox R functions with little or no command line input, it is still an R package at its core. The user must pay attention to the R console in R-studio for error messages and to know when R is working (e.g. downloading data) or is idle and ready for more user inputs. Future version will likely have built in error checking and messages in the GUI.
+
+### Open the GUI
+
+Open R-studio in 32-bit mode and type the following commands in the console:
+
+```R
+library(QWToolbox)
+qwtoolbox()
+```
+The qwtoolbox() function call runs the GUI and a new window will appear containing hte QWToolbox GUI. You may now work mostly from this GUI window.
+
+###Pull in data
+
+For the data you need to supply R with the name of your local NWIS server, and the two database numbers containing your data. Most databases use database "01" for the environmental sample data and database "02" for replicate and blank sample data. 
+
+An example for the Colorado server would be "NWIS Server name: NWISCO" "Environmental Database: 01" QA Database: 02"
+
+Data can be brought in for a single site, site numbers from a csv file, or a list of favorites which you can save and load up. Parameters can be pulled by NWIS parameter group, a favorite list of pcodes, or from a list of pcodes in a csv file. Data can be subset to a user specified date range, or all data can be pulled if left blank.
+
+###Plotting Data
+
+The plotting tab will be populated with various plot types once data has been imported. Click the "Open plot device" button to open up a seperate plotting window that will contain all plots generate as well as options to save the plot.
+
+In general, most plots will refresh with changing user input (e.g. changing a site or parameter). If the plot does not refresh for some user inputs, hit the "refresh plot" button. If the plot still does not refresh, look for error messages in the R console display. For example, if a site has no data for the chosen plot paremeter, no new plot will appear and an error message will be given in the R console.
+
+Flagging a sample:
+An outlier sample can be "flagged" with the sample record number by click "flag sample" and then clicking on the sample point in the plot. If the sample point lies very near another sample point, the user is advised to double check that the proper record number was placed for the point. In most instances, outliers will not be near other data points. The flagged sample information along with where it was flagged will be sent to a flagged sample report which can be viewed in the "Tables" tab.
+
+###Table summaries
+Currently there is a pseudo-interactive table tab that holds a table of all data, a table of blanks, and a table of charge balance results. The user can also generate a flagged sample report.
+
+These tables take a long time to populate for large data sets and future versions may simply use the R-studio table viewer. This will require the user to have some knowledge of R to manipulate the tables.
+
+###Non-NWQL data upload
+
+
+
