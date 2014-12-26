@@ -117,5 +117,11 @@ These tables take a long time to populate for large data sets and future version
 
 ###Non-NWQL data upload
 
+This tab faccilitates formatting files from non-NWQL labs for upload into NWIS using the QWData batch upload function. This is for basic uploads and does not accomodate a lot of user-specified coding. However, it works well for uploading basic data into NWIS with a single laboratory reporting level. At a minimum, it will provide the user with template QWSample and QWResult files that can be edited with additional coding.
+
+The NWIS uploader requires two input files: a lab file and a pcode file. The lab file contains all the sample and result information in a standard samples by rows and results by columns format. The pcode file contains all the meta-data associated with the parameters. 
+
+There are 3 options for generating a QWSample file. For samples that are already logged in, for example using PCFF, select option 1. This is the preffered method and the program will pull a QWSample file from the local NWIS server based on the sample information provided in the labfile. The user can also supply their own QWSample file using option 2. Option 3 generate a basic QWSample file from a few user inputs and the sample information provided in the lab-file. 
+The lab file and pcode file must be in a specific format, and a template excel workbook is included on this site to demonstrate the formatting.
 
 
