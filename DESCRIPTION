@@ -8,7 +8,7 @@ Maintainer: T. Joe Mills <tmills@usgs.gov>
 Description: Facilitates rapid review and exploration of data stored in
     internal, local NWIS servers.
 License: CC0
-Depends:
+Imports:
     RGtk2,
     gWidgetsRGtk2,
     gWidgets,
