@@ -1,4 +1,4 @@
-'QWToolbox'
+QWToolbox
 ===
 
 Toolbox for discrete water-quality data review and exploration. 
@@ -16,3 +16,12 @@ explore their data through a variety of graphical and tabular outputs. Because t
 connection and graphical user interface, it requires special installation procedures beyond a typical R package.
 Please see the section on installation instructions for further information.
 
+##Installation instructions
+There are a number of special considerations for installation of QWToolbox beyond those of a typical R package:
+1) This package must be run in 32-bit R for the ODBC driver to function properly,
+2) This package requires that the gtk graphical user interface libraries be installed on the user's machine, and
+3) The beta-test version of the QWToolbox package must be installed form Github using the R package developement functions in the "devtools" package.
+
+Below is a step-by-step installation procedur, please complete the steps in the order listed below.
+
+Step 1. Install the ODBC driver and establish the NWIS ODBC connection. Your database administrator or IT specialist          will need to assist for this step. 
