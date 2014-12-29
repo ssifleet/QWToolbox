@@ -22,7 +22,12 @@ There are a number of special considerations for installation of QWToolbox beyon
 2) This package requires that the gtk graphical user interface libraries be installed on the user's machine, and
 3) The beta-test version of the QWToolbox package must be installed form Github using the R package developement functions in the "devtools" package.
 
-Below is a step-by-step installation procedure, please complete the steps in the order listed below.
+Below is a step-by-step installation procedure, please complete the steps in the order listed below. 
+
+###Download the most recent version of R and R studio at:
+http://cran.r-project.org/bin/windows/base/
+and
+http://www.rstudio.com/products/rstudio/download/
 
 ###Step 1. Install the ODBC driver and establish the NWIS ODBC connection. 
 
