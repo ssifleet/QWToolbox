@@ -35,14 +35,14 @@ gbutton("Open flagged sample report",container = .guiEnv$tables.tab.frame, handl
   {
     #set row to delete
     rowdelete <- as.numeric(svalue(.guiEnv$flag.sample.delete))*-1
-    #delete row
-    .guiEnv$flagged.samples <- .guiEnv$flagged.samples[rowdelete,]
+    #delete all flagged records matching records in row delete from flagged report
+    .guiEnv$flagged.samples <- .guiEnv$flagged.samples[!(.guiEnv$flagged.samples$RECORD_NO %in% 
+                                                           .guiEnv$flagged.report$RECORD_NO[as.numeric(svalue(.guiEnv$flag.sample.delete))]),]
     
     ###Refresh gdf table
     delete(popwin.frame,.guiEnv$flagged.report.edit)
     # Generate flagged report from flagged sample list
-    .guiEnv$flagged.report <- flagReport(qw.data = .guiEnv$qw.data,
-                                         flagged.samples = .guiEnv$flagged.samples)
+    .guiEnv$flagged.report <- .guiEnv$flagged.report[rowdelete,]
     #Put in gdf
     .guiEnv$flagged.report.edit <-gdf(items=.guiEnv$flagged.report,container=popwin.frame,expand=TRUE)
   })
@@ -51,8 +51,9 @@ gbutton("Open flagged sample report",container = .guiEnv$tables.tab.frame, handl
   
   ###Button to save changes to gdf
   gbutton("Save changes",container=popwin.frame,handler=function(h,...){
-    .guiEnv$flagged.report <- as.data.frame(.guiEnv$flagged.report.edit[,])
+    .guiEnv$saved.flagged.report <- as.data.frame(.guiEnv$flagged.report.edit[,])
     delete(popwin.frame,.guiEnv$flagged.report.edit)
+    .guiEnv$flagged.report <- .guiEnv$saved.flagged.report 
     .guiEnv$flagged.report.edit <-gdf(items=.guiEnv$flagged.report,container=popwin.frame,expand=TRUE)
     
   })
@@ -68,14 +69,40 @@ gbutton("Open flagged sample report",container = .guiEnv$tables.tab.frame, handl
     write.csv(.guiEnv$flagged.report,file=svalue(export.file),row.names=FALSE)
     dispose(popwin)
   })
-
   })
   
-  if(!exists("flagged.report",.guiEnv))
+  ###Button to refresh report for new flagged samples
+  gbutton("Refresh (unsaved changes will be lost)",container=popwin.frame,handler=function(h,...){
+    if(exists("saved.flagged.report",.guiEnv))
+    {
+      .guiEnv$flagged.report <- .guiEnv$saved.flagged.report
+      ###Add in new flagged samples
+      addFlags <- flagReport(qw.data = .guiEnv$qw.data,
+                             flagged.samples = .guiEnv$flagged.samples)
+      .guiEnv$flagged.report <- rbind(.guiEnv$flagged.report,addFlags[!(addFlags$RECORD_NO %in% .guiEnv$flagged.report$RECORD_NO),] )       
+                         
+    }else{.guiEnv$flagged.report <- flagReport(qw.data = .guiEnv$qw.data,
+                                               flagged.samples = .guiEnv$flagged.samples)}
+    
+    ###delete old table and put in new one
+    delete(popwin.frame,.guiEnv$flagged.report.edit)
+    .guiEnv$flagged.report.edit <-gdf(items=.guiEnv$flagged.report,container=popwin.frame,expand=TRUE)
+    
+  })
+
+###Checks for svaed report and generates a new one if not saved
+  
+  if(exists("saved.flagged.report",.guiEnv))
   {
-  .guiEnv$flagged.report <- flagReport(qw.data = .guiEnv$qw.data,
-                               flagged.samples = .guiEnv$flagged.samples)
-  }else{}
+    .guiEnv$flagged.report <- .guiEnv$saved.flagged.report
+    ###Add in new flagged samples
+    addFlags <- flagReport(qw.data = .guiEnv$qw.data,
+                           flagged.samples = .guiEnv$flagged.samples)
+    .guiEnv$flagged.report <- rbind(.guiEnv$flagged.report,addFlags[!(addFlags$RECORD_NO %in% .guiEnv$flagged.report$RECORD_NO),] )       
+    
+                       
+  }else{.guiEnv$flagged.report <- flagReport(qw.data = .guiEnv$qw.data,
+                                             flagged.samples = .guiEnv$flagged.samples)}
   
  
   ###Put in gdf
