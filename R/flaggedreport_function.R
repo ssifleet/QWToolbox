@@ -8,7 +8,8 @@ flagged.report <- data.frame(
   SAMPLE_START_DT = qw.data$DataTable$SAMPLE_START_DT[which(qw.data$DataTable$RECORD_NO %in% .guiEnv$flagged.samples$RECORD_NO)],
   MEDIUM_CD = qw.data$DataTable$MEDIUM_CD[which(qw.data$DataTable$RECORD_NO %in% .guiEnv$flagged.samples$RECORD_NO)],
   RECORD_NO = qw.data$DataTable$RECORD_NO[which(qw.data$DataTable$RECORD_NO %in% .guiEnv$flagged.samples$RECORD_NO)],
-  LAB_NO = qw.data$DataTable$LAB_NO[which(qw.data$DataTable$RECORD_NO %in% .guiEnv$flagged.samples$RECORD_NO)]
+  LAB_NO = qw.data$DataTable$LAB_NO[which(qw.data$DataTable$RECORD_NO %in% .guiEnv$flagged.samples$RECORD_NO)],
+  stringsAsFactors = FALSE
   )
 
 ###Add in plot flags
