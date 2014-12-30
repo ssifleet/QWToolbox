@@ -14,16 +14,74 @@ gbutton("Populate tables",container = .guiEnv$tables.tab.frame, handler = functi
   dispose(popwin)
   })
 
-###Popup to tell user to wait for data import
 
 
 glabel(container=.guiEnv$tables.tab.frame,"WARNING: Populating tables may take several minutes depending\non the number of samples and variables.\nNot recommended for very large datasets.")
-gbutton("Generate flagged sample report",container = .guiEnv$tables.tab.frame, handler = function(h,...) {
+
+###Open flag report window
+gbutton("Open flagged sample report",container = .guiEnv$tables.tab.frame, handler = function(h,...) {
+  
+  
   popwin <- gwindow("Flagged sample report")
+  popwin.frame <- gframe(container=popwin,horizontal=FALSE)
+  
+  ### Generate flagged report from flagged sample list
+  ###frame to delete sample from flagged list
+  .guiEnv$flag.sample.delete.frame <- ggroup(text = "Delete row from flagged sample list",container=popwin.frame, horizontal = TRUE,expand=FALSE)
+  glabel("Row number",container = .guiEnv$flag.sample.delete.frame)
+  .guiEnv$flag.sample.delete <- gedit(container = .guiEnv$flag.sample.delete.frame)
+  #delete rows from flagged sample list
+  gbutton("Delete",container=.guiEnv$flag.sample.delete.frame, handler = function(h,...)
+  {
+    #set row to delete
+    rowdelete <- as.numeric(svalue(.guiEnv$flag.sample.delete))*-1
+    #delete row
+    .guiEnv$flagged.samples <- .guiEnv$flagged.samples[rowdelete,]
+    
+    ###Refresh gdf table
+    delete(popwin.frame,.guiEnv$flagged.report.edit)
+    # Generate flagged report from flagged sample list
+    .guiEnv$flagged.report <- flagReport(qw.data = .guiEnv$qw.data,
+                                         flagged.samples = .guiEnv$flagged.samples)
+    #Put in gdf
+    .guiEnv$flagged.report.edit <-gdf(items=.guiEnv$flagged.report,container=popwin.frame,expand=TRUE)
+  })
+  
+  
+  
+  ###Button to save changes to gdf
+  gbutton("Save changes",container=popwin.frame,handler=function(h,...){
+    .guiEnv$flagged.report <- as.data.frame(.guiEnv$flagged.report.edit[,])
+    delete(popwin.frame,.guiEnv$flagged.report.edit)
+    .guiEnv$flagged.report.edit <-gdf(items=.guiEnv$flagged.report,container=popwin.frame,expand=TRUE)
+    
+  })
+  
+  ###Button to export report
+  gbutton("Export report",container=popwin.frame,handler=function(h,...){
+  popwin <- gwindow("Save preferences")
+  popwin.frame <- gframe(container=popwin,expand=TRUE,horizontal=FALSE)
+  glabel("Filename",container = popwin.frame)
+  export.file <- gfilebrowse(container = popwin.frame,text = "Select site ID file...",quote = FALSE)
+  
+  gbutton("Export report",container=popwin.frame,handler = function(...){
+    write.csv(.guiEnv$flagged.report,file=svalue(export.file),row.names=FALSE)
+    dispose(popwin)
+  })
+
+  })
+  
+  if(!exists("flagged.report",.guiEnv))
+  {
   .guiEnv$flagged.report <- flagReport(qw.data = .guiEnv$qw.data,
                                flagged.samples = .guiEnv$flagged.samples)
-  .guiEnv$flagged.report <-gdf(items=.guiEnv$flagged.report,container=popwin)
+  }else{}
   
+ 
+  ###Put in gdf
+  .guiEnv$flagged.report.edit <-gdf(items=.guiEnv$flagged.report,container=popwin.frame,expand=TRUE)
+  
+
   
 })
 }
