@@ -1,6 +1,17 @@
 #' QWToolbox gui
 #' Function to run the QWToolbox gui
 #' @export
+#' @import RGtk2
+#' @import gWidgetsRGtk2
+#' @import gWidgets
+#' @import reshape2
+#' @import plyr
+#' @import RODBC 
+#' @import stringr 
+#' @import ggplot2
+#' @import grid
+#' @import gridExtra 
+
 
 qwtoolbox <- function(...){
   
